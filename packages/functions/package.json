@@ -1,0 +1,16 @@
+{
+  "name": "@grantly/functions",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@openauthjs/openauth": "^0.3.7",
+    "hono": "^4.7.0",
+    "valibot": "1.0.0-rc.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.0",
+    "@types/node": "^22.13.1",
+    "sst": "catalog:"
+  }
+}
