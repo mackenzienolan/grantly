@@ -17,6 +17,10 @@ export default $config({
     await import("./infra/secrets");
     await import("./infra/db");
     await import("./infra/auth");
-    await import("./infra/web");
+    const { www } = await import("./infra/web");
+
+    return {
+      www: www.url,
+    };
   },
 });
