@@ -28,6 +28,10 @@ declare module "sst" {
     "vpc": {
       "type": "sst.aws.Vpc"
     }
+    "www": {
+      "type": "sst.aws.SvelteKit"
+      "url": string
+    }
   }
 }
 /// <reference path="sst-env.d.ts" />
