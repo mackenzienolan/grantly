@@ -23,46 +23,46 @@ export const usersTable = pgTable("users", {
   ...timestamps,
 });
 
-export const teams = pgTable("teams", {
+export const teamsTable = pgTable("teams", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 255 }).notNull(),
   ownerId: integer().references(() => usersTable.id),
   ...timestamps,
 });
 
-export const teamMembers = pgTable(
+export const teamMembersTable = pgTable(
   "team_members",
   {
-    teamId: integer().references(() => teams.id),
+    teamId: integer().references(() => teamsTable.id),
     userId: integer().references(() => usersTable.id),
     ...timestamps,
   },
   (t) => [primaryKey({ columns: [t.teamId, t.userId] })]
 );
 
-export const products = pgTable("products", {
+export const productsTable = pgTable("products", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 255 }).notNull(),
   externalId: varchar({ length: 255 }).notNull(),
-  teamId: integer().references(() => teams.id),
+  teamId: integer().references(() => teamsTable.id),
   ...timestamps,
 });
 
 export const featureTypes = pgEnum("feature_types", ["boolean", "metered"]);
 
-export const features = pgTable("features", {
+export const featuresTable = pgTable("features", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 255 }).notNull(),
-  productId: integer().references(() => products.id),
+  productId: integer().references(() => productsTable.id),
   type: featureTypes("type").notNull(),
   ...timestamps,
 });
 
-export const productFeatures = pgTable(
+export const productFeaturesTable = pgTable(
   "product_features",
   {
-    productId: integer().references(() => products.id),
-    featureId: integer().references(() => features.id),
+    productId: integer().references(() => productsTable.id),
+    featureId: integer().references(() => featuresTable.id),
     ...timestamps,
   },
   (t) => [primaryKey({ columns: [t.productId, t.featureId] })]

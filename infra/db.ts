@@ -12,6 +12,7 @@ export const postgres = new sst.aws.Postgres("postgres", {
 new sst.x.DevCommand("Studio", {
   link: [postgres],
   dev: {
+    directory: "packages/db",
     command: "npx drizzle-kit studio",
   },
 });

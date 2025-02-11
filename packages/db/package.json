@@ -6,15 +6,18 @@
   "types": "./src/index.ts",
   "dependencies": {
     "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.39.3",
+    "drizzle-orm": "catalog:",
     "pg": "^8.13.1"
   },
   "devDependencies": {
+    "@tsconfig/node22": "^22.0.0",
     "@types/pg": "^8.11.11",
-    "drizzle-kit": "^0.30.4",
+    "drizzle-kit": "catalog:",
     "tsx": "^4.19.2"
   },
   "scripts": {
-    "db": "sst shell drizzle-kit"
+    "db": "sst shell drizzle-kit",
+    "clean": "npx rimraf node_modules",
+    "typecheck": "tsc --noEmit"
   }
 }

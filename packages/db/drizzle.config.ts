@@ -7,6 +7,7 @@ export default defineConfig({
   schema: "./schema.ts",
   dialect: "postgresql",
   dbCredentials: {
+    ssl: Resource.App.stage === "main" ? { rejectUnauthorized: true } : false,
     host: Resource.postgres.host,
     port: Resource.postgres.port,
     user: Resource.postgres.username,

@@ -1,12 +1,22 @@
 {
-    "name": "@grantly/api",
-    "version": "0.0.1",
-    "private": true,
-    "main": "./src/index.ts",
-    "types": "./src/index.ts",
-    "dependencies": {
-        "@hono/zod-validator": "^0.4.2",
-        "hono": "^4.7.0",
-        "zod": "^3.24.1"
-    }
+  "name": "@grantly/api",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "drizzle-orm": "catalog:",
+    "@grantly/db": "workspace:*",
+    "@hono/zod-validator": "^0.4.2",
+    "drizzle-zod": "^0.7.0",
+    "hono": "^4.7.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.0"
+  },
+  "scripts": {
+    "clean": "npx rimraf node_modules",
+    "typecheck": "tsc --noEmit"
+  }
 }
