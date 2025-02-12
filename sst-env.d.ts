@@ -13,6 +13,15 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
+    "api": {
+      "name": string
+      "type": "sst.aws.Function"
+      "url": string
+    }
+    "apiRouter": {
+      "type": "sst.aws.Router"
+      "url": string
+    }
     "auth": {
       "type": "sst.aws.Auth"
       "url": string
