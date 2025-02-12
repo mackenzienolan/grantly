@@ -29,7 +29,7 @@ declare module "sst" {
       "type": "sst.aws.Vpc"
     }
     "www": {
-      "type": "sst.aws.SvelteKit"
+      "type": "sst.aws.Astro"
       "url": string
     }
   }

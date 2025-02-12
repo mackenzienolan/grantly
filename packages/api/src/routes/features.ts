@@ -7,8 +7,9 @@ import { FeatureCreate, FeatureUpdate } from "../schemas/feature";
 
 const features = new Hono();
 
-features.get("/", (c) => {
-  return c.text("Hello Hono!");
+features.get("/", async (c) => {
+  const listOfFeatures = await db.query.featuresTable.findMany();
+  return c.json(listOfFeatures);
 });
 
 features.post(

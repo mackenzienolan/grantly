@@ -14,13 +14,15 @@ export default $config({
     };
   },
   async run() {
+    const { www } = await import("./infra/web");
     await import("./infra/secrets");
     await import("./infra/db");
     await import("./infra/auth");
-    const { www } = await import("./infra/web");
+    const { apiRouter } = await import("./infra/api");
 
     return {
       www: www.url,
+      api: apiRouter.url,
     };
   },
 });

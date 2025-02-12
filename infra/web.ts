@@ -1,9 +1,7 @@
-import { auth } from "./auth";
-
-export const www = new sst.aws.SvelteKit("www", {
+export const www = new sst.aws.Astro("www", {
   path: "packages/www",
-  link: [auth],
   dev: {
-    url: "http://localhost:5173",
+    url: "http://localhost:4321",
   },
+  domain: $app.stage === "main" ? "grantlyapp.com" : null,
 });
