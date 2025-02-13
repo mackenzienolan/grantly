@@ -17,14 +17,6 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "GITHUB_CLIENT_ID": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "GITHUB_CLIENT_SECRET": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
     "REDIS_TOKEN": {
       "type": "sst.sst.Secret"
       "value": string

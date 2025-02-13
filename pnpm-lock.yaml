@@ -5,16 +5,24 @@ settings:
   excludeLinksFromLockfile: false
 
 catalogs:
+  clerk:
+    '@clerk/backend':
+      specifier: 1.24.1
+      version: 1.24.1
   default:
+    sst:
+      specifier: 3.8.3
+      version: 3.8.3
+  drizzle:
     drizzle-kit:
       specifier: 0.30.4
       version: 0.30.4
     drizzle-orm:
       specifier: 0.39.3
       version: 0.39.3
-    sst:
-      specifier: 3.8.3
-      version: 3.8.3
+    drizzle-zod:
+      specifier: 0.5.1
+      version: 0.5.1
 
 importers:
 
@@ -40,17 +48,17 @@ importers:
   packages/api:
     dependencies:
       '@clerk/backend':
-        specifier: ^1.24.0
-        version: 1.24.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: catalog:clerk
+        version: 1.24.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@grantly/db':
         specifier: workspace:*
         version: link:../db
-      '@grantly/event':
+      '@grantly/events':
         specifier: workspace:*
-        version: link:../event
+        version: link:../events
       '@hono/clerk-auth':
         specifier: ^2.0.0
-        version: 2.0.0(@clerk/backend@1.24.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(hono@4.7.0)
+        version: 2.0.0(@clerk/backend@1.24.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(hono@4.7.0)
       '@hono/zod-validator':
         specifier: ^0.4.2
         version: 0.4.2(hono@4.7.0)(zod@3.24.1)
@@ -58,11 +66,11 @@ importers:
         specifier: ^1.34.4
         version: 1.34.4
       drizzle-orm:
-        specifier: 'catalog:'
+        specifier: catalog:drizzle
         version: 0.39.3(@types/pg@8.11.11)(pg@8.13.1)
       drizzle-zod:
-        specifier: ^0.7.0
-        version: 0.7.0(drizzle-orm@0.39.3(@types/pg@8.11.11)(pg@8.13.1))(zod@3.24.1)
+        specifier: catalog:drizzle
+        version: 0.5.1(drizzle-orm@0.39.3(@types/pg@8.11.11)(pg@8.13.1))(zod@3.24.1)
       hono:
         specifier: ^4.7.0
         version: 4.7.0
@@ -83,7 +91,7 @@ importers:
         specifier: ^16.4.7
         version: 16.4.7
       drizzle-orm:
-        specifier: 'catalog:'
+        specifier: catalog:drizzle
         version: 0.39.3(@types/pg@8.11.11)(pg@8.13.1)
       pg:
         specifier: ^8.13.1
@@ -96,20 +104,20 @@ importers:
         specifier: ^8.11.11
         version: 8.11.11
       drizzle-kit:
-        specifier: 'catalog:'
+        specifier: catalog:drizzle
         version: 0.30.4
       tsx:
         specifier: ^4.19.2
         version: 4.19.2
 
-  packages/event:
+  packages/events:
     dependencies:
       '@clerk/backend':
-        specifier: ^1.24.0
-        version: 1.24.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: catalog:clerk
+        version: 1.24.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@macknolandev/clerk-zod':
-        specifier: 1.0.7
-        version: 1.0.7
+        specifier: 1.0.8
+        version: 1.0.8
       zod:
         specifier: ^3.24.1
         version: 3.24.1
@@ -126,12 +134,21 @@ importers:
 
   packages/functions:
     dependencies:
+      '@clerk/backend':
+        specifier: catalog:clerk
+        version: 1.24.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@macknolandev/clerk-zod':
+        specifier: 1.0.8
+        version: 1.0.8
       '@openauthjs/openauth':
         specifier: ^0.3.7
         version: 0.3.7(arctic@2.3.4)(hono@4.7.0)
       '@upstash/redis':
         specifier: ^1.34.4
         version: 1.34.4
+      drizzle-orm:
+        specifier: catalog:drizzle
+        version: 0.39.3(@types/pg@8.11.11)(pg@8.13.1)
       hono:
         specifier: ^4.7.0
         version: 4.7.0
@@ -144,13 +161,19 @@ importers:
       valibot:
         specifier: 1.0.0-rc.0
         version: 1.0.0-rc.0(typescript@5.7.3)
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.1
     devDependencies:
       '@grantly/api':
         specifier: workspace:*
         version: link:../api
-      '@grantly/event':
+      '@grantly/db':
         specifier: workspace:*
-        version: link:../event
+        version: link:../db
+      '@grantly/events':
+        specifier: workspace:*
+        version: link:../events
       '@tsconfig/node22':
         specifier: ^22.0.0
         version: 22.0.0
@@ -337,6 +360,10 @@ packages:
     resolution: {integrity: sha512-DlOZ9pnCY77ngHKFZzC7ZImHBVjMf2whPLvnnBt4YXjkvuQ3m1v1tQHUXb8qqlwilptHU4/WzkOlXytez+iJ+A==}
     engines: {node: '>=18.17.0'}
 
+  '@clerk/backend@1.24.1':
+    resolution: {integrity: sha512-yxHgvtGePC67o8gJcLCP8S4ETeDGjnphGdQ+J8upmgsQ1GFt58pAZVXznpjwpLSkdOXa6XpvyAyV9mc6gFNfgw==}
+    engines: {node: '>=18.17.0'}
+
   '@clerk/shared@2.21.0':
     resolution: {integrity: sha512-8uszJbdyfpk/qmu4SoIiT3T79TgSJe2uRm0m2isRZeGWw5DQFlf/dAF3iGOj7p2ad+24SGYb4cXwrrRdYyO8KQ==}
     engines: {node: '>=18.17.0'}
@@ -349,8 +376,24 @@ packages:
       react-dom:
         optional: true
 
+  '@clerk/shared@2.21.1':
+    resolution: {integrity: sha512-uwdxPI6RVa6f2YiOP8c1yDIjwTXB4IGG9BWKyiDGB5328UvPpEXnxutHUppXwLupM/XD/hNN9Npf+5CDbrR0wg==}
+    engines: {node: '>=18.17.0'}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0 || ^19.0.0-0
+      react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-0
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
   '@clerk/types@4.45.1':
     resolution: {integrity: sha512-lS3Q8Ih4CasMY3ed7u+bXdO/s0OF1DIbSUhzQSKpfluzUxxkkFlPiRKsefctL4cnGt4fOzyD+T9ebF0up6sUkA==}
+    engines: {node: '>=18.17.0'}
+
+  '@clerk/types@4.46.0':
+    resolution: {integrity: sha512-HsY3OCS9T4YP95skfoxwDQ41axXaCkjq67JoXoXxh0VTdvFXVzHwAoRiCvv9dLJeoapf1bfwJjGEMnDuNi3gbw==}
     engines: {node: '>=18.17.0'}
 
   '@drizzle-team/brocli@0.10.2':
@@ -1075,8 +1118,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@macknolandev/clerk-zod@1.0.7':
-    resolution: {integrity: sha512-eqdTD/NVrGEoJx4ltZyWdzsWkPjjUNiqZez3STLP/W6lqvH2/XqgUGFwtMToYl6UfT7tGN8Y9kYjQhE1gX45Tg==}
+  '@macknolandev/clerk-zod@1.0.8':
+    resolution: {integrity: sha512-GfadVRsS5hhfynVKOGnVFvYEtP6kYkz7/bBUCVcQkSgMnwXKK6kOFbXlg6bIAHPFwPCgytxTVpPjTNbUZMo9QQ==}
     engines: {node: '>=18'}
 
   '@nodelib/fs.scandir@2.1.5':
@@ -1736,11 +1779,11 @@ packages:
       sqlite3:
         optional: true
 
-  drizzle-zod@0.7.0:
-    resolution: {integrity: sha512-xgCRYYVEzRkeXTS33GSMgoowe3vKsMNBjSI+cwG1oLQVEhAWWbqtb/AAMlm7tkmV4fG/uJjEmWzdzlEmTgWOoQ==}
+  drizzle-zod@0.5.1:
+    resolution: {integrity: sha512-C/8bvzUH/zSnVfwdSibOgFjLhtDtbKYmkbPbUCq46QZyZCH6kODIMSOgZ8R7rVjoI+tCj3k06MRJMDqsIeoS4A==}
     peerDependencies:
-      drizzle-orm: '>=0.36.0'
-      zod: '>=3.0.0'
+      drizzle-orm: '>=0.23.13'
+      zod: '*'
 
   dset@3.1.4:
     resolution: {integrity: sha512-2QF/g9/zTaPDc3BjNcVTGoBbXBgYfMTTceLaYcFJ/W9kggFUkhxD/hMEeuLKbugyef9SqAx8cpgwlIP/jinUTA==}
@@ -3431,6 +3474,17 @@ snapshots:
       - react
       - react-dom
 
+  '@clerk/backend@1.24.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@clerk/shared': 2.21.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@clerk/types': 4.46.0
+      cookie: 1.0.2
+      snakecase-keys: 8.0.1
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - react
+      - react-dom
+
   '@clerk/shared@2.21.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@clerk/types': 4.45.1
@@ -3443,7 +3497,23 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
+  '@clerk/shared@2.21.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@clerk/types': 4.46.0
+      dequal: 2.0.3
+      glob-to-regexp: 0.4.1
+      js-cookie: 3.0.5
+      std-env: 3.8.0
+      swr: 2.3.2(react@19.0.0)
+    optionalDependencies:
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+
   '@clerk/types@4.45.1':
+    dependencies:
+      csstype: 3.1.3
+
+  '@clerk/types@4.46.0':
     dependencies:
       csstype: 3.1.3
 
@@ -3748,9 +3818,9 @@ snapshots:
 
   '@fastify/busboy@2.1.1': {}
 
-  '@hono/clerk-auth@2.0.0(@clerk/backend@1.24.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(hono@4.7.0)':
+  '@hono/clerk-auth@2.0.0(@clerk/backend@1.24.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(hono@4.7.0)':
     dependencies:
-      '@clerk/backend': 1.24.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@clerk/backend': 1.24.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       hono: 4.7.0
 
   '@hono/zod-validator@0.4.2(hono@4.7.0)(zod@3.24.1)':
@@ -3859,7 +3929,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@macknolandev/clerk-zod@1.0.7':
+  '@macknolandev/clerk-zod@1.0.8':
     dependencies:
       zod: 3.24.1
 
@@ -4476,7 +4546,7 @@ snapshots:
       '@types/pg': 8.11.11
       pg: 8.13.1
 
-  drizzle-zod@0.7.0(drizzle-orm@0.39.3(@types/pg@8.11.11)(pg@8.13.1))(zod@3.24.1):
+  drizzle-zod@0.5.1(drizzle-orm@0.39.3(@types/pg@8.11.11)(pg@8.13.1))(zod@3.24.1):
     dependencies:
       drizzle-orm: 0.39.3(@types/pg@8.11.11)(pg@8.13.1)
       zod: 3.24.1

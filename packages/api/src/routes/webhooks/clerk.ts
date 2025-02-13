@@ -1,11 +1,62 @@
 import { type WebhookEvent } from "@clerk/backend";
-import events from "@grantly/event/clerk";
+import events from "@grantly/events/clerk";
 import { Hono } from "hono";
 import { Resource } from "sst";
 import { bus } from "sst/aws/bus";
 import { Webhook } from "svix";
 
 const clerk = new Hono();
+
+const sendEvent = async (evt: WebhookEvent) => {
+  switch (evt.type) {
+    case "user.created":
+      await bus.publish(Resource.bus, events["clerk.user.created"], evt);
+      break;
+    case "user.updated":
+      await bus.publish(Resource.bus, events["clerk.user.updated"], evt);
+      break;
+    case "user.deleted":
+      await bus.publish(Resource.bus, events["clerk.user.deleted"], evt);
+      break;
+    case "organization.created":
+      await bus.publish(
+        Resource.bus,
+        events["clerk.organization.created"],
+        evt
+      );
+      break;
+    case "organization.updated":
+      await bus.publish(
+        Resource.bus,
+        events["clerk.organization.updated"],
+        evt
+      );
+      break;
+    case "organization.deleted":
+      await bus.publish(
+        Resource.bus,
+        events["clerk.organization.deleted"],
+        evt
+      );
+      break;
+    case "organizationMembership.updated":
+      await bus.publish(
+        Resource.bus,
+        events["clerk.organizationMembership.updated"],
+        evt
+      );
+      break;
+    case "organizationMembership.deleted":
+      await bus.publish(
+        Resource.bus,
+        events["clerk.organizationMembership.deleted"],
+        evt
+      );
+      break;
+    default:
+      break;
+  }
+};
 
 clerk.post("/", async (c) => {
   const SIGNING_SECRET = Resource.CLERK_WEBHOOK_SECRET.value;
@@ -58,13 +109,7 @@ clerk.post("/", async (c) => {
   console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
   console.log("Webhook payload:", body);
 
-  if (eventType) {
-    await bus.publish(
-      Resource.bus,
-      events[`clerk.${eventType}` as keyof typeof events],
-      evt
-    );
-  }
+  await sendEvent(evt);
 
   return c.body("Webhook received", 200);
 });

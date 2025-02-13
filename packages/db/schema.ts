@@ -1,6 +1,8 @@
 import { relations } from "drizzle-orm";
 import {
+  date,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   primaryKey,
@@ -14,20 +16,30 @@ const timestamps = {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
+  deletedAt: timestamp("deleted_at"),
 };
 
 export const usersTable = pgTable("users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  age: integer().notNull(),
-  email: varchar({ length: 255 }).notNull().unique(),
+  clerkUserId: varchar({ length: 255 }).notNull(),
+  firstName: varchar({ length: 255 }),
+  lastName: varchar({ length: 255 }),
+  birthday: date(),
+  primaryEmailAddress: varchar({ length: 255 }).notNull().unique(),
+  emails: jsonb("emails").notNull(),
+  primaryPhoneNumber: varchar({ length: 255 }),
+  phoneNumbers: jsonb("phone_numbers").notNull(),
+  imageUrl: varchar({ length: 255 }),
+  _clerkRaw: jsonb("clerk_raw").notNull(),
   ...timestamps,
 });
 
 export const teamsTable = pgTable("teams", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  id: varchar({ length: 255 }).primaryKey(),
   name: varchar({ length: 255 }).notNull(),
+  slug: varchar({ length: 255 }).notNull(),
   ownerId: integer().references(() => usersTable.id),
+  _clerkRaw: jsonb("clerk_raw").notNull(),
   ...timestamps,
 });
 
@@ -54,15 +66,14 @@ export const integrationsTable = pgTable("integrations", {
   ...timestamps,
 });
 
-export const teamMembersTable = pgTable(
-  "team_members",
-  {
-    teamId: integer().references(() => teamsTable.id),
-    userId: integer().references(() => usersTable.id),
-    ...timestamps,
-  },
-  (t) => [primaryKey({ columns: [t.teamId, t.userId] })]
-);
+export const teamMembersTable = pgTable("team_members", {
+  id: varchar({ length: 255 }).primaryKey(),
+  role: varchar({ length: 255 }).notNull(),
+  _clerkRaw: jsonb("clerk_raw").notNull(),
+  teamId: varchar({ length: 255 }).references(() => teamsTable.id),
+  userId: varchar({ length: 255 }).references(() => usersTable.clerkUserId),
+  ...timestamps,
+});
 
 export const productsTable = pgTable("products", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
