@@ -93,16 +93,20 @@ export const productFeaturesTable = pgTable(
   (t) => [primaryKey({ columns: [t.productId, t.featureId] })]
 );
 
-export const customersTable = pgTable("customers", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  externalId: varchar({ length: 255 }).notNull(),
-  teamId: integer().references(() => teamsTable.id),
-  ...timestamps,
-});
+export const customersTable = pgTable(
+  "customers",
+  {
+    externalId: varchar({ length: 255 }).notNull(),
+    teamId: integer().references(() => teamsTable.id),
+    ...timestamps,
+  },
+  (t) => [primaryKey({ columns: [t.externalId, t.teamId] })]
+);
 
 export const entitlementsTable = pgTable("entitlements", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  customerId: integer().references(() => customersTable.id),
+  customerId: varchar({ length: 255 }).notNull(),
+  teamId: integer().references(() => teamsTable.id),
   featureId: integer().references(() => featuresTable.id),
   expiresAt: timestamp("expires_at"),
   quotaUsed: integer().notNull().default(0),
@@ -148,8 +152,8 @@ export const customerRelations = relations(customersTable, ({ many, one }) => ({
 
 export const entitlementRelations = relations(entitlementsTable, ({ one }) => ({
   customer: one(customersTable, {
-    fields: [entitlementsTable.customerId],
-    references: [customersTable.id],
+    fields: [entitlementsTable.customerId, entitlementsTable.teamId],
+    references: [customersTable.externalId, customersTable.teamId],
   }),
   feature: one(featuresTable, {
     fields: [entitlementsTable.featureId],

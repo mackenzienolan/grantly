@@ -1,5 +1,4 @@
 /// <reference path="./.sst/platform/config.d.ts" />
-
 export default $config({
   app(input) {
     return {
@@ -8,18 +7,18 @@ export default $config({
         aws: {
           profile: input.stage === "main" ? "grantly-prod" : "grantly-dev",
         },
+        "@upstash/pulumi": "0.3.14",
       },
       removal: input?.stage === "main" ? "retain" : "remove",
       home: "aws",
     };
   },
   async run() {
-    const { www } = await import("./infra/web");
     await import("./infra/secrets");
+    await import("./infra/bus");
+    const { www } = await import("./infra/web");
     await import("./infra/db");
-    await import("./infra/auth");
     const { apiRouter } = await import("./infra/api");
-
     return {
       www: www.url,
       api: apiRouter.url,

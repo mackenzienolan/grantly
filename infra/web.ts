@@ -3,5 +3,5 @@ export const www = new sst.aws.Astro("www", {
   dev: {
     url: "http://localhost:4321",
   },
-  domain: $app.stage === "main" ? "grantlyapp.com" : null,
+  // domain: $app.stage === "main" ? "grantlyapp.com" : null,
 });
