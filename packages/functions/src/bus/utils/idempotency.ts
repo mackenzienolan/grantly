@@ -3,7 +3,7 @@ import { Resource } from "sst";
 import { bus } from "sst/aws/bus";
 
 const redis = new Redis({
-  url: Resource.REDIS_URL.value,
+  url: `https://${Resource.REDIS_URL.value}`,
   token: Resource.REDIS_TOKEN.value,
 });
 

@@ -1,34 +1,17 @@
-import { clerkMiddleware } from "@hono/clerk-auth";
-import { Hono } from "hono";
-import { Resource } from "sst";
-import customers from "./routes/customers";
-import features from "./routes/features";
-import oauth from "./routes/oauth";
-import stripe from "./routes/stripe";
-import webhooks from "./routes/webhooks";
+import configureOpenAPI from "./lib/configure-open-api";
+import createApp from "./lib/create-app";
+import index from "./routes";
+import webhooks from "./routes/webhooks/webhooks.index";
 
-const app = new Hono().basePath("/api");
+const app = createApp();
+configureOpenAPI(app);
 
-app.use(
-  "*",
-  clerkMiddleware({
-    secretKey: Resource.CLERK_SECRET_KEY.value,
-    publishableKey: Resource.CLERK_PUBLISHABLE_KEY.value,
-  })
-);
+const routes = [index, webhooks] as const;
 
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
+routes.forEach((r) => {
+  app.route("/", r);
 });
 
-app.get("/test", (c) => {
-  return c.text("Hello Hono!");
-});
-
-app.route("/webhooks", webhooks);
-app.route("/oauth", oauth);
-app.route("/stripe", stripe);
-app.route("/customers", customers);
-app.route("/features", features);
+export type AppType = (typeof routes)[number];
 
 export default app;

@@ -1,6 +1,7 @@
 import { withIdempotency } from "@/bus/utils/idempotency";
 import { createLogger } from "@/utils/logger";
-import { db, usersTable } from "@grantly/db";
+import { db } from "@grantly/db";
+import { usersTable } from "@grantly/db/schema";
 import events from "@grantly/events/clerk";
 import { bus } from "sst/aws/bus";
 import {
@@ -12,6 +13,7 @@ const logger = createLogger("clerk.user.created");
 
 export const handler = bus.subscriber(
   events["clerk.user.created"],
+
   withIdempotency(async (evt, _raw) => {
     logger.info({ evt }, "User created. Running sync.");
 
@@ -21,7 +23,9 @@ export const handler = bus.subscriber(
       clerkUserId: userId,
       firstName: evt.properties.data.first_name,
       lastName: evt.properties.data.last_name,
-      birthday: evt.properties.data.birthday,
+      birthday: evt.properties.data.birthday
+        ? new Date(evt.properties.data.birthday)
+        : undefined,
       primaryEmailAddress: getPrimaryEmailAddress(evt.properties.data),
       emails: evt.properties.data.email_addresses,
       primaryPhoneNumber: getPrimaryPhoneNumber(evt.properties.data),

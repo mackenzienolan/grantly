@@ -8,3 +8,5 @@ export const redis = new upstash.RedisDatabase("redis", {
 
 export const REDIS_URL = new sst.Secret("REDIS_URL", redis.endpoint);
 export const REDIS_TOKEN = new sst.Secret("REDIS_TOKEN", redis.restToken);
+
+export const REDIS_SECRETS = [REDIS_URL, REDIS_TOKEN];

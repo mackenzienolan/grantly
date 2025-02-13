@@ -1,6 +1,6 @@
 {
-  "id": "b64cf0e1-cb9f-4c7e-8a33-9f686d8d745b",
-  "prevId": "3e712d03-f223-497c-8823-2b3fbe70b776",
+  "id": "738d45f9-d1b4-40ad-88a2-e4df4e1b4ed6",
+  "prevId": "b59fb3a1-e7f3-492d-83f5-9935cacff107",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -8,23 +8,6 @@
       "name": "customers",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "always",
-            "name": "customers_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
-        },
         "externalId": {
           "name": "externalId",
           "type": "varchar(255)",
@@ -33,7 +16,7 @@
         },
         "teamId": {
           "name": "teamId",
-          "type": "integer",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -50,25 +33,25 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "customers_teamId_teams_id_fk": {
-          "name": "customers_teamId_teams_id_fk",
-          "tableFrom": "customers",
-          "tableTo": "teams",
-          "columnsFrom": [
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "customers_externalId_teamId_pk": {
+          "name": "customers_externalId_teamId_pk",
+          "columns": [
+            "externalId",
             "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          ]
         }
       },
-      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
@@ -97,7 +80,13 @@
         },
         "customerId": {
           "name": "customerId",
-          "type": "integer",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "teamId": {
+          "name": "teamId",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -133,37 +122,16 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "entitlements_customerId_customers_id_fk": {
-          "name": "entitlements_customerId_customers_id_fk",
-          "tableFrom": "entitlements",
-          "tableTo": "customers",
-          "columnsFrom": [
-            "customerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "entitlements_featureId_features_id_fk": {
-          "name": "entitlements_featureId_features_id_fk",
-          "tableFrom": "entitlements",
-          "tableTo": "features",
-          "columnsFrom": [
-            "featureId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -210,6 +178,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "teamId": {
+          "name": "teamId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -223,24 +197,16 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "features_productId_products_id_fk": {
-          "name": "features_productId_products_id_fk",
-          "tableFrom": "features",
-          "tableTo": "products",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -331,24 +297,16 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "integrations_teamId_teams_id_fk": {
-          "name": "integrations_teamId_teams_id_fk",
-          "tableFrom": "integrations",
-          "tableTo": "teams",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -384,37 +342,16 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "product_features_productId_products_id_fk": {
-          "name": "product_features_productId_products_id_fk",
-          "tableFrom": "product_features",
-          "tableTo": "products",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "product_features_featureId_features_id_fk": {
-          "name": "product_features_featureId_features_id_fk",
-          "tableFrom": "product_features",
-          "tableTo": "features",
-          "columnsFrom": [
-            "featureId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {
         "product_features_productId_featureId_pk": {
           "name": "product_features_productId_featureId_pk",
@@ -464,7 +401,7 @@
         },
         "teamId": {
           "name": "teamId",
-          "type": "integer",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -481,24 +418,16 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "products_teamId_teams_id_fk": {
-          "name": "products_teamId_teams_id_fk",
-          "tableFrom": "products",
-          "tableTo": "teams",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -509,15 +438,33 @@
       "name": "team_members",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clerk_raw": {
+          "name": "clerk_raw",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
         "teamId": {
           "name": "teamId",
-          "type": "integer",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
         "userId": {
           "name": "userId",
-          "type": "integer",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -534,46 +481,17 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "team_members_teamId_teams_id_fk": {
-          "name": "team_members_teamId_teams_id_fk",
-          "tableFrom": "team_members",
-          "tableTo": "teams",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "team_members_userId_users_id_fk": {
-          "name": "team_members_userId_users_id_fk",
-          "tableFrom": "team_members",
-          "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "team_members_teamId_userId_pk": {
-          "name": "team_members_teamId_userId_pk",
-          "columns": [
-            "teamId",
-            "userId"
-          ]
-        }
-      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
@@ -585,23 +503,18 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "varchar(255)",
           "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "always",
-            "name": "teams_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
+          "notNull": true
         },
         "name": {
           "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -611,6 +524,12 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "clerk_raw": {
+          "name": "clerk_raw",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -625,24 +544,16 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "teams_ownerId_users_id_fk": {
-          "name": "teams_ownerId_users_id_fk",
-          "tableFrom": "teams",
-          "tableTo": "users",
-          "columnsFrom": [
-            "ownerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -670,21 +581,63 @@
             "cycle": false
           }
         },
-        "name": {
-          "name": "name",
+        "clerkUserId": {
+          "name": "clerkUserId",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "age": {
-          "name": "age",
-          "type": "integer",
+        "firstName": {
+          "name": "firstName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lastName": {
+          "name": "lastName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "birthday": {
+          "name": "birthday",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "primaryEmailAddress": {
+          "name": "primaryEmailAddress",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "email": {
-          "name": "email",
+        "emails": {
+          "name": "emails",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "primaryPhoneNumber": {
+          "name": "primaryPhoneNumber",
           "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone_numbers": {
+          "name": "phone_numbers",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "imageUrl": {
+          "name": "imageUrl",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clerk_raw": {
+          "name": "clerk_raw",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
@@ -701,17 +654,23 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
+        "users_primaryEmailAddress_unique": {
+          "name": "users_primaryEmailAddress_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "email"
+            "primaryEmailAddress"
           ]
         }
       },

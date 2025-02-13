@@ -1,9 +1,16 @@
+import { postgres } from "./db";
+import { REDIS_SECRETS } from "./redis";
+import { API_SECRETS } from "./secrets";
+
 export const bus = new sst.aws.Bus("bus");
+
+const DEFAULT_LINK = [...API_SECRETS, ...REDIS_SECRETS, postgres];
 
 bus.subscribe(
   "clerkUserCreated",
   {
     handler: "packages/functions/src/bus/clerk/user/created/insert.handler",
+    link: DEFAULT_LINK,
   },
   {
     pattern: {
@@ -15,6 +22,7 @@ bus.subscribe(
   "clerkUserUpdated",
   {
     handler: "packages/functions/src/bus/clerk/user/updated/sync.handler",
+    link: DEFAULT_LINK,
   },
   {
     pattern: {
@@ -27,6 +35,7 @@ bus.subscribe(
   {
     handler:
       "packages/functions/src/bus/clerk/user/deleted/soft-delete.handler",
+    link: DEFAULT_LINK,
   },
   {
     pattern: {
@@ -39,6 +48,7 @@ bus.subscribe(
   {
     handler:
       "packages/functions/src/bus/clerk/organization/created/insert.handler",
+    link: DEFAULT_LINK,
   },
   {
     pattern: {
@@ -51,6 +61,7 @@ bus.subscribe(
   {
     handler:
       "packages/functions/src/bus/clerk/organization/updated/sync.handler",
+    link: DEFAULT_LINK,
   },
   {
     pattern: {
@@ -63,6 +74,7 @@ bus.subscribe(
   {
     handler:
       "packages/functions/src/bus/clerk/organization/deleted/soft-delete.handler",
+    link: DEFAULT_LINK,
   },
   {
     pattern: {
@@ -75,6 +87,7 @@ bus.subscribe(
   {
     handler:
       "packages/functions/src/bus/clerk/organizationMembership/updated/sync.handler",
+    link: DEFAULT_LINK,
   },
   {
     pattern: {
@@ -87,6 +100,7 @@ bus.subscribe(
   {
     handler:
       "packages/functions/src/bus/clerk/organizationMembership/deleted/soft-delete.handler",
+    link: DEFAULT_LINK,
   },
   {
     pattern: {
