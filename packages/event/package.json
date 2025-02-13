@@ -1,0 +1,26 @@
+{
+  "name": "@grantly/event",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./clerk": "./src/events/clerk.ts",
+    "./schema/*": "./src/schema/*.ts",
+    "./registry": "./src/registry.ts",
+    "./event": "./src/index.ts"
+  },
+  "dependencies": {
+    "@clerk/backend": "^1.24.0",
+    "@macknolandev/clerk-zod": "1.0.6",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.0",
+    "@types/node": "^22.13.1",
+    "sst": "catalog:"
+  },
+  "scripts": {
+    "clean": "npx rimraf node_modules",
+    "typecheck": "tsc --noEmit"
+  }
+}

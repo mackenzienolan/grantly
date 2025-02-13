@@ -5,6 +5,18 @@
 
 declare module "sst" {
   export interface Resource {
+    "CLERK_PUBLISHABLE_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "CLERK_SECRET_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "CLERK_WEBHOOK_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "GITHUB_CLIENT_ID": {
       "type": "sst.sst.Secret"
       "value": string
@@ -22,9 +34,10 @@ declare module "sst" {
       "type": "sst.aws.Router"
       "url": string
     }
-    "auth": {
-      "type": "sst.aws.Auth"
-      "url": string
+    "bus": {
+      "arn": string
+      "name": string
+      "type": "sst.aws.Bus"
     }
     "postgres": {
       "database": string
@@ -36,6 +49,10 @@ declare module "sst" {
     }
     "vpc": {
       "type": "sst.aws.Vpc"
+    }
+    "www": {
+      "type": "sst.aws.Astro"
+      "url": string
     }
   }
 }
