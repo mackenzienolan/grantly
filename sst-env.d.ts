@@ -25,6 +25,14 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
+    "REDIS_TOKEN": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "REDIS_URL": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "api": {
       "name": string
       "type": "sst.aws.Function"
