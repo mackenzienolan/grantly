@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+  boolean,
   integer,
   jsonb,
   pgEnum,
@@ -38,6 +39,7 @@ export const teamsTable = pgTable("teams", {
   name: varchar({ length: 255 }).notNull(),
   slug: varchar({ length: 255 }).notNull(),
   ownerId: integer(),
+  onboardingComplete: boolean("onboarding_complete").notNull().default(false),
   _clerkRaw: jsonb("clerk_raw").notNull(),
   ...timestamps,
 });

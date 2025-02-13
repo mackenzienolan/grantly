@@ -17,6 +17,10 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
+    "PUBLIC_CLERK_PUBLISHABLE_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "REDIS_TOKEN": {
       "type": "sst.sst.Secret"
       "value": string

@@ -1,0 +1,22 @@
+---
+import { routes } from '@/lib/routes';
+import '@/styles/global.css';
+import { OrganizationList } from '@clerk/astro/components';
+
+const { orgId } = Astro.locals.auth();
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Select Organization | Grantly</title>
+	</head> 
+	<body>
+		<main class="flex justify-center items-center h-screen">
+            <OrganizationList hidePersonal={true} afterCreateOrganizationUrl={routes.app.dashboard} />
+		</main>
+	</body>
+</html>
