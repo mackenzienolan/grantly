@@ -58,6 +58,10 @@ declare module "sst" {
       "type": "sst.aws.Astro"
       "url": string
     }
+    "www2": {
+      "type": "sst.aws.SvelteKit"
+      "url": string
+    }
   }
 }
 /// <reference path="sst-env.d.ts" />
