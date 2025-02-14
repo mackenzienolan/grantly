@@ -1,0 +1,63 @@
+---
+// Sidebar.astro
+import { OrganizationSwitcher } from '@clerk/astro/components';
+import { Icon } from 'astro-icon/components';
+
+interface NavItem {
+  title: string;
+  href: string;
+  icon?: string;
+  items?: NavItem[];
+}
+
+interface Props {
+  navItems: NavItem[];
+}
+
+const { navItems } = Astro.props;
+---
+
+<aside class="w-64 h-screen bg-gray-100 text-gray-800 p-4 overflow-y-auto flex flex-col justify-between">
+  <nav>
+    <ul class="space-y-4">
+      <li class="p-2">
+        <img src="/logo_transparent.png" class="w-16 h-16" />
+      </li>
+      {navItems.map((item) => (
+        <li class="mb-2">
+          <a
+            href={item.href}
+            class="flex items-center p-2 rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            {item.icon && <Icon name={`lucide:${item.icon}`} class="w-5 h-5 mr-2" />}
+            <span>{item.title}</span>
+          </a>
+          {item.items && (
+            <ul class="ml-4 mt-2">
+              {item.items.map((subItem) => (
+                <li class="mb-1">
+                  <a
+                    href={subItem.href}
+                    class="flex items-center p-2 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                  >
+                    {subItem.icon && <Icon name={`lucide:${subItem.icon}`} class="w-4 h-4 mr-2" />}
+                    <span>{subItem.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ul>
+  </nav>
+  <div class="flex flex-col gap-2">
+    <OrganizationSwitcher />
+  </div>
+</aside>
+
+<style>
+  aside {
+    /* Add any additional styles here */
+  }
+</style>
