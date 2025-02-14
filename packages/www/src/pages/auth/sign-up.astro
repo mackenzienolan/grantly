@@ -1,0 +1,28 @@
+---
+import '@/styles/global.css';
+import { SignUp as ClerkSignUp } from '@clerk/astro/components';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Sign Up | Grantly</title>
+	</head>
+	<body>
+		<main class="flex justify-center items-center h-screen">
+			<ClerkSignUp />
+		</main>
+	</body>
+</html>
+
+<style>
+	/* You can add any global styles here */
+	body {
+		font-family: Arial, sans-serif;
+		line-height: 1.6;
+		color: #333;
+	}
+</style>

@@ -10,8 +10,11 @@
     "clean": "npx rimraf node_modules .astro"
   },
   "dependencies": {
-    "@astrojs/react": "^4.2.0",
-    "@clerk/astro": "^2.1.20",
+    "@astrojs/react": "4.2.0",
+    "@clerk/astro": "2.2.0",
+    "@radix-ui/react-context-menu": "^2.2.6",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-slot": "^1.1.2",
     "@tailwindcss/vite": "^4.0.6",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
