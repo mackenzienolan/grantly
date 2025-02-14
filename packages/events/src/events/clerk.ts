@@ -1,4 +1,5 @@
 import {
+  DeletedObjectJSONSchema,
   OrganizationInvitationJSONSchema,
   OrganizationJSONSchema,
   OrganizationMembershipJSONSchema,
@@ -21,7 +22,7 @@ const events = {
   ),
   "clerk.user.deleted": defineEvent(
     "clerk.user.deleted",
-    createWebhookSchema(UserJSONSchema)
+    createWebhookSchema(DeletedObjectJSONSchema)
   ),
   "clerk.organization.created": defineEvent(
     "clerk.organization.created",
@@ -33,7 +34,7 @@ const events = {
   ),
   "clerk.organization.deleted": defineEvent(
     "clerk.organization.deleted",
-    createWebhookSchema(OrganizationJSONSchema)
+    createWebhookSchema(DeletedObjectJSONSchema)
   ),
   "clerk.organizationInvitation.created": defineEvent(
     "clerk.organizationInvitation.created",
@@ -45,7 +46,7 @@ const events = {
   ),
   "clerk.organizationInvitation.deleted": defineEvent(
     "clerk.organizationInvitation.deleted",
-    createWebhookSchema(OrganizationInvitationJSONSchema)
+    createWebhookSchema(DeletedObjectJSONSchema)
   ),
   "clerk.role.created": defineEvent(
     "clerk.role.created",
@@ -57,7 +58,7 @@ const events = {
   ),
   "clerk.role.deleted": defineEvent(
     "clerk.role.deleted",
-    createWebhookSchema(RoleJSONSchema)
+    createWebhookSchema(DeletedObjectJSONSchema)
   ),
   "clerk.permission.created": defineEvent(
     "clerk.permission.created",
@@ -69,7 +70,7 @@ const events = {
   ),
   "clerk.permission.deleted": defineEvent(
     "clerk.permission.deleted",
-    createWebhookSchema(PermissionJSONSchema)
+    createWebhookSchema(DeletedObjectJSONSchema)
   ),
   "clerk.organizationMembership.created": defineEvent(
     "clerk.organizationMembership.created",

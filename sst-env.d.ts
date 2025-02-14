@@ -17,11 +17,11 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "GITHUB_CLIENT_ID": {
+    "REDIS_TOKEN": {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "GITHUB_CLIENT_SECRET": {
+    "REDIS_URL": {
       "type": "sst.sst.Secret"
       "value": string
     }

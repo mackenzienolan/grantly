@@ -6,13 +6,13 @@
   "types": "./src/index.ts",
   "dependencies": {
     "dotenv": "^16.4.7",
-    "drizzle-orm": "catalog:",
+    "drizzle-orm": "catalog:drizzle",
     "pg": "^8.13.1"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
     "@types/pg": "^8.11.11",
-    "drizzle-kit": "catalog:",
+    "drizzle-kit": "catalog:drizzle",
     "tsx": "^4.19.2"
   },
   "scripts": {

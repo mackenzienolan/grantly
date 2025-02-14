@@ -1,18 +1,22 @@
-import { type WebhookEvent } from "@clerk/backend";
-import events from "@grantly/event/clerk";
-import { Hono } from "hono";
-import { Resource } from "sst";
-import { bus } from "sst/aws/bus";
+import { WebhookEvent } from "@clerk/backend";
+import * as HttpStatusCodes from "stoker/http-status-codes";
 import { Webhook } from "svix";
+import type { AppRouteHandler } from "../../lib/types";
 
-const clerk = new Hono();
+import { Resource } from "sst";
+import { sendEvent } from "./utils";
+import type { ClerkRoute } from "./webhooks.routes";
 
-clerk.post("/", async (c) => {
+export const clerk: AppRouteHandler<ClerkRoute> = async (c) => {
   const SIGNING_SECRET = Resource.CLERK_WEBHOOK_SECRET.value;
 
   if (!SIGNING_SECRET) {
-    throw new Error(
-      "Error: Please add SIGNING_SECRET from Clerk Dashboard to .env or .env.local"
+    return c.json(
+      {
+        message:
+          "Please add SIGNING_SECRET from Clerk Dashboard to .env or .env.local",
+      },
+      HttpStatusCodes.UNAUTHORIZED
     );
   }
 
@@ -26,9 +30,12 @@ clerk.post("/", async (c) => {
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response("Error: Missing Svix headers", {
-      status: 400,
-    });
+    return c.json(
+      {
+        message: "Error: Missing Svix headers",
+      },
+      HttpStatusCodes.BAD_REQUEST
+    );
   }
 
   // Get body
@@ -46,9 +53,12 @@ clerk.post("/", async (c) => {
     }) as WebhookEvent;
   } catch (err) {
     console.error("Error: Could not verify webhook:", err);
-    return new Response("Error: Verification error", {
-      status: 400,
-    });
+    return c.json(
+      {
+        message: "Error: Verification error",
+      },
+      HttpStatusCodes.BAD_REQUEST
+    );
   }
 
   // Do something with payload
@@ -58,15 +68,8 @@ clerk.post("/", async (c) => {
   console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
   console.log("Webhook payload:", body);
 
-  if (eventType) {
-    await bus.publish(
-      Resource.bus,
-      events[`clerk.${eventType}` as keyof typeof events],
-      evt
-    );
-  }
+  const res = await sendEvent(evt);
 
-  return c.body("Webhook received", 200);
-});
-
-export default clerk;
+  c.var.logger.info(res, `Published event ${eventType} with ID ${id} to bus`);
+  return c.json({ message: "Webhook received" }, HttpStatusCodes.OK);
+};

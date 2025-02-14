@@ -1,6 +1,6 @@
 {
-  "id": "b59fb3a1-e7f3-492d-83f5-9935cacff107",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "946993ce-a03c-4b9e-93c0-eaf66c71114b",
+  "prevId": "738d45f9-d1b4-40ad-88a2-e4df4e1b4ed6",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -601,7 +601,7 @@
         },
         "birthday": {
           "name": "birthday",
-          "type": "date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
@@ -666,6 +666,13 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
+        "users_clerkUserId_unique": {
+          "name": "users_clerkUserId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "clerkUserId"
+          ]
+        },
         "users_primaryEmailAddress_unique": {
           "name": "users_primaryEmailAddress_unique",
           "nullsNotDistinct": false,

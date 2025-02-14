@@ -19,6 +19,7 @@ export default $config({
     const { www } = await import("./infra/web");
     await import("./infra/db");
     const { apiRouter } = await import("./infra/api");
+    await import("./infra/redis");
     return {
       www: www.url,
       api: apiRouter.url,
