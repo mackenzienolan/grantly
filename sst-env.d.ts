@@ -55,11 +55,7 @@ declare module "sst" {
       "type": "sst.aws.Vpc"
     }
     "www": {
-      "type": "sst.aws.Astro"
-      "url": string
-    }
-    "www2": {
-      "type": "sst.aws.SvelteKit"
+      "type": "sst.aws.Nextjs"
       "url": string
     }
   }
