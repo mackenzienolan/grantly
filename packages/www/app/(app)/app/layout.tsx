@@ -1,3 +1,4 @@
+import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -36,7 +37,7 @@ export default async function AppLayout({
 
   return (
     <SidebarProvider>
-      {/* <AppSidebar
+      <AppSidebar
         teams={
           memberships?.length > 0
             ? memberships.map((membership) => ({
@@ -48,7 +49,7 @@ export default async function AppLayout({
               }))
             : []
         }
-      /> */}
+      />
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
   );

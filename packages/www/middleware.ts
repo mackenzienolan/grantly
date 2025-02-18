@@ -1,8 +1,53 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher(["/app(.*)"]);
-export default clerkMiddleware(async (auth, request) => {
-  if (isProtectedRoute(request)) {
+
+function createOrgSelectionUrl(req: NextRequest, redirectUrl: string) {
+  const searchParams = new URLSearchParams({ redirectUrl });
+  return new URL(`/org-selection?${searchParams.toString()}`, req.url);
+}
+
+function handleOrgSelection(
+  userId: string | null,
+  orgId: string | null | undefined,
+  req: NextRequest
+) {
+  if (userId && !orgId && req.nextUrl.pathname !== "/org-selection") {
+    return NextResponse.redirect(createOrgSelectionUrl(req, req.url));
+  }
+  return null;
+}
+
+// function handleOnboarding(
+//   userId: string | null,
+//   orgId: string | null | undefined,
+//   sessionClaims:
+//     | Awaited<ReturnType<ClerkMiddlewareAuth>>["sessionClaims"]
+//     | null,
+//   req: NextRequest
+// ) {
+//   if (
+//     userId &&
+//     orgId &&
+//     req.nextUrl.pathname !== "/org-selection" &&
+//     !sessionClaims?.org_metadata?.onboarding_complete &&
+//     !isOnboardingRoute(req)
+//   ) {
+//     return NextResponse.redirect(createOnboardingUrl(req));
+//   }
+//   return null;
+// }
+
+export default clerkMiddleware(async (auth, req) => {
+  const { userId, orgId } = await auth();
+
+  // Handle organization selection
+  const orgSelectionResponse = handleOrgSelection(userId, orgId, req);
+  if (orgSelectionResponse) return orgSelectionResponse;
+
+  // Handle protected routes
+  if (isProtectedRoute(req)) {
     await auth.protect();
   }
 });

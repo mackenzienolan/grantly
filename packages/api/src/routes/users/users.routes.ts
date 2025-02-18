@@ -1,8 +1,8 @@
-import { TeamSchema } from "@/schemas/team";
-import { TeamMembersSchema } from "@/schemas/teamMembers";
 import { createRoute, z } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import { jsonContent } from "stoker/openapi/helpers";
+import { TeamSchema } from "../../schemas/team";
+import { TeamMembersSchema } from "../../schemas/teamMembers";
 
 const tags = ["Users"];
 
