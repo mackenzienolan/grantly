@@ -4,7 +4,7 @@
   "scripts": {
     "sso": "aws sso login --sso-session=grantly",
     "build": "turbo build",
-    "dev": "turbo dev",
+    "dev": "npx sst dev",
     "lint": "turbo lint",
     "clean": "turbo clean",
     "preclean": "npx rimraf .turbo .sst node_modules",

@@ -1,3 +1,8 @@
+import {
+  OrganizationJSONSchema,
+  OrganizationMembershipJSONSchema,
+  UserJSONSchema,
+} from "@macknolandev/clerk-zod";
 import { relations } from "drizzle-orm";
 import {
   boolean,
@@ -9,6 +14,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+import { z } from "zod";
 
 const timestamps = {
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -30,7 +36,9 @@ export const usersTable = pgTable("users", {
   primaryPhoneNumber: varchar({ length: 255 }),
   phoneNumbers: jsonb("phone_numbers").notNull(),
   imageUrl: varchar({ length: 255 }),
-  _clerkRaw: jsonb("clerk_raw").notNull(),
+  _clerkRaw: jsonb("clerk_raw")
+    .$type<z.infer<typeof UserJSONSchema>>()
+    .notNull(),
   ...timestamps,
 });
 
@@ -40,7 +48,9 @@ export const teamsTable = pgTable("teams", {
   slug: varchar({ length: 255 }).notNull(),
   ownerId: integer(),
   onboardingComplete: boolean("onboarding_complete").notNull().default(false),
-  _clerkRaw: jsonb("clerk_raw").notNull(),
+  _clerkRaw: jsonb("clerk_raw")
+    .$type<z.infer<typeof OrganizationJSONSchema>>()
+    .notNull(),
   ...timestamps,
 });
 
@@ -70,9 +80,11 @@ export const integrationsTable = pgTable("integrations", {
 export const teamMembersTable = pgTable("team_members", {
   id: varchar({ length: 255 }).primaryKey(),
   role: varchar({ length: 255 }).notNull(),
-  _clerkRaw: jsonb("clerk_raw").notNull(),
+  _clerkRaw: jsonb("clerk_raw")
+    .$type<z.infer<typeof OrganizationMembershipJSONSchema>>()
+    .notNull(),
   teamId: varchar({ length: 255 }),
-  userId: varchar({ length: 255 }),
+  userId: integer("user_id"),
   ...timestamps,
 });
 

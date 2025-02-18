@@ -16,7 +16,7 @@ export const handler = bus.subscriber(
     const insert = {
       id: membershipId,
       teamId: evt.properties.data.organization.id,
-      userId: evt.properties.data.public_user_data.user_id,
+      userId: Number(evt.properties.data.public_user_data.user_id),
       role: evt.properties.data.role,
       createdAt: new Date(evt.properties.data.created_at),
       updatedAt: new Date(evt.properties.data.updated_at),

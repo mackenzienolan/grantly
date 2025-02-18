@@ -14,6 +14,11 @@ export const handler = bus.subscriber(
 
     const orgId = evt.properties.data.id;
 
+    if (!orgId) {
+      logger.error({ evt }, "Organization ID is undefined");
+      return;
+    }
+
     await db
       .update(teamsTable)
       .set({

@@ -12,6 +12,7 @@ catalogs:
     "@clerk/backend": "1.24.1"
 
 catalog:
+  "@macknolandev/clerk-zod": "1.0.10"
   tailwindcss: "3.4.13"
   typescript: "5.6.3"
   lucide-react: "0.456.0"

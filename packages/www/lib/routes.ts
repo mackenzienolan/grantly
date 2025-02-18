@@ -3,6 +3,16 @@ const routes = {
     signIn: "/sign-in",
     signUp: "/sign-up",
   },
+  www: {
+    root: "/",
+    features: "/features",
+    pricing: "/pricing",
+    contact: "/contact",
+    testimonials: "/testimonials",
+    about: "/about",
+    terms: "/terms",
+    privacy: "/privacy",
+  },
   app: {
     dashboard: {
       root: "/app",
