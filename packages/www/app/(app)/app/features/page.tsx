@@ -1,11 +1,24 @@
 import { AppHeader } from "@/components/app-header";
-import { Button } from "@/components/ui/button";
-import routes from "@/lib/routes";
-import Link from "next/link";
+import { client } from "@/lib/client";
+import { auth } from "@clerk/nextjs/server";
 import { columns } from "./columns";
+import { CreateFeatureBtn } from "./create-feature-btn";
 import { DataTable } from "./data-table";
 
-export default function Features() {
+export default async function Features() {
+  const { getToken } = await auth();
+  const token = await getToken();
+  const response = await client.features.$get(
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const features = response.ok ? (await response.json()).data.features : [];
+
   return (
     <div>
       <AppHeader
@@ -13,14 +26,10 @@ export default function Features() {
           { title: "Home", href: "/" },
           { title: "Features", href: "/features" },
         ]}
-        actions={[
-          <Button asChild key="create-feature">
-            <Link href={routes.app.features.create}>Create Feature</Link>
-          </Button>,
-        ]}
+        actions={[<CreateFeatureBtn key="create-feature" />]}
       />
       <div className="p-4">
-        <DataTable columns={columns} data={[]} />
+        <DataTable columns={columns} data={features} />
       </div>
     </div>
   );

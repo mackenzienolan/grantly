@@ -20,6 +20,7 @@
     },
     "typecheck": {},
     "clean": {},
-    "test": {}
+    "test": {},
+    "test:watch": {}
   }
 }

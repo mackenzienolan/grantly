@@ -2,9 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { title } from "radash";
-import { GetFeaturesResponse } from "./data";
 
-export const columns: ColumnDef<GetFeaturesResponse[number]>[] = [
+export const columns: ColumnDef<unknown>[] = [
   {
     accessorKey: "name",
     header: "Feature",

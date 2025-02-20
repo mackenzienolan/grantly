@@ -1,5 +1,4 @@
 import { type AppType } from "@grantly/api";
 import { hc } from "hono/client";
-import { Resource } from "sst";
 
-export const client = hc<AppType>(Resource.apiRouter.url);
+export const client = hc<AppType>(process.env.NEXT_PUBLIC_API_URL!);
