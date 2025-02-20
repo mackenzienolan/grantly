@@ -1,6 +1,11 @@
 import { apiRouter } from "./api";
 import { CLERK_SECRET_KEY, PUBLIC_CLERK_PUBLISHABLE_KEY } from "./secrets";
 
+export const NEXT_PUBLIC_API_URL = new sst.Secret(
+  "NEXT_PUBLIC_API_URL",
+  apiRouter.url
+);
+
 export const www = new sst.aws.Nextjs("www", {
   path: "packages/www",
   dev: {
@@ -11,6 +16,7 @@ export const www = new sst.aws.Nextjs("www", {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: PUBLIC_CLERK_PUBLISHABLE_KEY.value,
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: "/sign-in",
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: "/sign-up",
+    NEXT_PUBLIC_API_URL: NEXT_PUBLIC_API_URL.value,
   },
-  link: [CLERK_SECRET_KEY, apiRouter],
+  link: [CLERK_SECRET_KEY, apiRouter, NEXT_PUBLIC_API_URL],
 });

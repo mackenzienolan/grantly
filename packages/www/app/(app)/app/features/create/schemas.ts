@@ -8,26 +8,21 @@ export const resetPeriodSchema = z.enum([
   "never",
   "billing_period",
 ]);
-export const variantSchema = z
-  .object({
-    name: z.string().min(1),
-    description: z.string().optional(),
-    type: z.literal("boolean"),
-    resetPeriod: resetPeriodSchema,
-  })
-  .or(
-    z.object({
-      name: z.string().min(1),
-      description: z.string().optional(),
-      type: z.literal("metered"),
-      quota: z.number().optional(),
-      resetPeriod: resetPeriodSchema,
-    })
-  );
 
-export const formSchema = z.object({
-  name: z.string().min(1),
-  description: z.string().min(1),
-  variants: z.array(variantSchema).min(1),
-  createAnother: z.boolean().optional(),
-});
+export const formSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("boolean"),
+    name: z.string().min(1),
+    description: z.string().min(1),
+    resetPeriod: resetPeriodSchema,
+    createAnother: z.boolean().optional(),
+  }),
+  z.object({
+    type: z.literal("metered"),
+    name: z.string().min(1),
+    description: z.string().min(1),
+    quota: z.coerce.number().min(0),
+    resetPeriod: resetPeriodSchema,
+    createAnother: z.boolean().optional(),
+  }),
+]);

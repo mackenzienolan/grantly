@@ -36,6 +36,27 @@
       "when": 1739834673738,
       "tag": "0004_icy_toad",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1740017854226,
+      "tag": "0005_organic_sage",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1740018436013,
+      "tag": "0006_nosy_mongoose",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1740019442615,
+      "tag": "0007_tense_vapor",
+      "breakpoints": true
     }
   ]
 }

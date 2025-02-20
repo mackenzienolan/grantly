@@ -10,71 +10,60 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { TypographyH1, TypographyH3 } from "@/components/ui/typography";
+import { TypographyH1 } from "@/components/ui/typography";
+import { client } from "@/lib/client";
+import routes from "@/lib/routes";
+import { useAuth } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Edit2, Plus, Save, X } from "lucide-react";
-import { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { formSchema } from "./schemas";
 
 export function CreateFeatureForm() {
-  const [editingIndices, setEditingIndices] = useState<Set<number>>(new Set());
+  const { getToken } = useAuth();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       description: "",
-      variants: [
-        {
-          name: "",
-          description: "",
-          type: "boolean",
-          resetPeriod: "billing_period",
-        },
-      ],
+      type: "boolean",
+      resetPeriod: "billing_period",
     },
   });
 
-  const variants = useFieldArray({
-    control: form.control,
-    name: "variants",
-  });
-
-  const addVariant = () => {
-    variants.append({
-      name: "",
-      description: "",
-      type: "boolean",
-      resetPeriod: "never",
-    });
-    setEditingIndices(new Set([...editingIndices, variants.fields.length]));
-  };
-
-  const startEditing = (index: number) => {
-    setEditingIndices(new Set([...editingIndices, index]));
-  };
-
-  const saveEdit = (index: number) => {
-    setEditingIndices(new Set([...editingIndices].filter((i) => i !== index)));
-  };
-
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const response = await client.features.$post(
+      {
+        json: data,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+        },
+      }
+    );
+    if (response.ok) {
+      toast.success("Feature created successfully");
+      if (!data.createAnother) {
+        router.push(routes.app.features.root);
+      }
+    } else {
+      toast.error("Failed to create feature");
+    }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit, (errors) => {
+          console.log(errors);
+        })}
+      >
         <div className="space-y-4">
           <TypographyH1>Create Feature</TypographyH1>
           <FormField
@@ -101,103 +90,6 @@ export function CreateFeatureForm() {
               </FormItem>
             )}
           />
-          <Separator />
-          <div>
-            <TypographyH3>Variants</TypographyH3>
-            {variants.fields.map((field, index) => (
-              <div key={field.id} className="flex items-center space-x-2 mb-2">
-                {editingIndices.has(index) ? (
-                  <>
-                    <FormField
-                      control={form.control}
-                      name={`variants.${index}.name`}
-                      render={({ field }) => (
-                        <FormItem>
-                          {/* <FormLabel>Name</FormLabel> */}
-                          <FormControl>
-                            <Input placeholder="Name" {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`variants.${index}.type`}
-                      render={({ field }) => (
-                        <FormItem>
-                          {/* <FormLabel>Type</FormLabel> */}
-                          <FormControl>
-                            <Select
-                              value={field.value}
-                              onValueChange={field.onChange}
-                            >
-                              <SelectTrigger className="mb-0">
-                                <SelectValue placeholder="Select a type" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="boolean">Boolean</SelectItem>
-                                <SelectItem value="metered">Metered</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    {form.watch(`variants.${index}.type`) === "metered" && (
-                      <FormField
-                        control={form.control}
-                        name={`variants.${index}.quota`}
-                        render={({ field }) => (
-                          <FormItem>
-                            {/* <FormLabel>Quota</FormLabel> */}
-                            <FormControl>
-                              <Input placeholder="Quota" {...field} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    )}
-                    <div>
-                      <Button
-                        type="button"
-                        size="icon"
-                        onClick={() => saveEdit(index)}
-                      >
-                        <Save className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <span className="flex-grow">{field.name}</span>
-                    <span className="flex-grow">{field.description}</span>
-                    <div>
-                      <Button
-                        type="button"
-                        size="icon"
-                        onClick={() => startEditing(index)}
-                      >
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </>
-                )}
-                <div>
-                  <Button
-                    type="button"
-                    size="icon"
-                    variant="destructive"
-                    onClick={() => variants.remove(index)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-            <Button type="button" onClick={addVariant} className="mt-2">
-              <Plus className="h-4 w-4 mr-2" /> Add Variant
-            </Button>
-          </div>
           <Separator />
           <div>
             <FormField
