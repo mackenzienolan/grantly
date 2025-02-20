@@ -113,9 +113,9 @@ export function CreateFeatureForm() {
                       name={`variants.${index}.name`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Name</FormLabel>
+                          {/* <FormLabel>Name</FormLabel> */}
                           <FormControl>
-                            <Input {...field} />
+                            <Input placeholder="Name" {...field} />
                           </FormControl>
                         </FormItem>
                       )}
@@ -125,13 +125,13 @@ export function CreateFeatureForm() {
                       name={`variants.${index}.type`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Type</FormLabel>
+                          {/* <FormLabel>Type</FormLabel> */}
                           <FormControl>
                             <Select
                               value={field.value}
                               onValueChange={field.onChange}
                             >
-                              <SelectTrigger>
+                              <SelectTrigger className="mb-0">
                                 <SelectValue placeholder="Select a type" />
                               </SelectTrigger>
                               <SelectContent>
@@ -147,12 +147,11 @@ export function CreateFeatureForm() {
                       <FormField
                         control={form.control}
                         name={`variants.${index}.quota`}
-                        defaultValue={0}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Quota</FormLabel>
+                            {/* <FormLabel>Quota</FormLabel> */}
                             <FormControl>
-                              <Input {...field} />
+                              <Input placeholder="Quota" {...field} />
                             </FormControl>
                           </FormItem>
                         )}
