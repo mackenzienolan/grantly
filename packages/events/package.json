@@ -12,7 +12,7 @@
   "dependencies": {
     "@clerk/backend": "catalog:clerk",
     "@macknolandev/clerk-zod": "catalog:",
-    "zod": "^3.24.1"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",

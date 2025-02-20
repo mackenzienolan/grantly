@@ -9,6 +9,8 @@ export const resetPeriodSchema = z.enum([
   "billing_period",
 ]);
 
+export const featureTypeSchema = z.enum(["boolean", "metered"]);
+
 export const formSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("boolean"),

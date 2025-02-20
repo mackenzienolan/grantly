@@ -1,10 +1,8 @@
 import { AppHeader } from "@/components/app-header";
-import { Button } from "@/components/ui/button";
 import { client } from "@/lib/client";
-import routes from "@/lib/routes";
 import { auth } from "@clerk/nextjs/server";
-import Link from "next/link";
 import { columns } from "./columns";
+import { CreateFeatureBtn } from "./create-feature-btn";
 import { DataTable } from "./data-table";
 
 export default async function Features() {
@@ -28,11 +26,7 @@ export default async function Features() {
           { title: "Home", href: "/" },
           { title: "Features", href: "/features" },
         ]}
-        actions={[
-          <Button asChild key="create-feature">
-            <Link href={routes.app.features.create}>Create Feature</Link>
-          </Button>,
-        ]}
+        actions={[<CreateFeatureBtn key="create-feature" />]}
       />
       <div className="p-4">
         <DataTable columns={columns} data={features} />

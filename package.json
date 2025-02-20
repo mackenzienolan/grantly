@@ -12,8 +12,8 @@
     "typecheck": "turbo typecheck --continue",
     "ui": "pnpm --filter @grantly/ui",
     "test": "turbo test --parallel",
-    "test:watch": "turbo test",
-    "test:run": "turbo test -- --run"
+    "test:watch": "turbo test:watch",
+    "test:run": "turbo test"
   },
   "dependencies": {
     "sst": "catalog:"
