@@ -1,0 +1,1 @@
+ALTER TABLE "team_members" RENAME COLUMN "userId" TO "user_id";

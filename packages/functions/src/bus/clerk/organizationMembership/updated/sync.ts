@@ -16,7 +16,7 @@ export const handler = bus.subscriber(
 
     const update = {
       teamId: evt.properties.data.organization.id,
-      userId: evt.properties.data.public_user_data.user_id,
+      userId: Number(evt.properties.data.public_user_data.user_id),
       role: evt.properties.data.role,
       updatedAt: new Date(evt.properties.data.updated_at),
       _clerkRaw: evt.properties.data,

@@ -83,6 +83,19 @@ bus.subscribe(
   }
 );
 bus.subscribe(
+  "clerkOrganizationMembershipCreated",
+  {
+    handler:
+      "packages/functions/src/bus/clerk/organizationMembership/created/insert.handler",
+    link: DEFAULT_LINK,
+  },
+  {
+    pattern: {
+      detailType: ["clerk.organizationMembership.created"],
+    },
+  }
+);
+bus.subscribe(
   "clerkOrganizationMembershipUpdated",
   {
     handler:

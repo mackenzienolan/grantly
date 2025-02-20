@@ -29,6 +29,12 @@ export const sendEvent = async (evt: WebhookEvent) => {
         events["clerk.organization.deleted"],
         evt
       );
+    case "organizationMembership.created":
+      return await bus.publish(
+        Resource.bus,
+        events["clerk.organizationMembership.created"],
+        evt
+      );
     case "organizationMembership.updated":
       return await bus.publish(
         Resource.bus,
