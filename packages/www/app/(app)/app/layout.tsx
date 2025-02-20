@@ -4,6 +4,7 @@ import { SidebarInset } from "@/components/ui/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { client } from "@/lib/client";
 import { auth } from "@clerk/nextjs/server";
+import { unstable_cache } from "next/cache";
 
 export default async function AppLayout({
   children,
@@ -11,29 +12,44 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const { getToken, sessionClaims } = await auth();
+  const getMemberships = unstable_cache(
+    async (
+      token: string | null,
+      sessionClaims: Awaited<ReturnType<typeof auth>>["sessionClaims"]
+    ) => {
+      if (!token || !sessionClaims) {
+        return [];
+      }
 
-  const userId = Number(sessionClaims?.["external_id"]);
+      const userId = Number(sessionClaims?.["external_id"]);
 
-  const response = await client.users[":id"].memberships.$get(
-    {
-      param: {
-        id: userId.toString(),
-      },
+      const response = await client.users[":id"].memberships.$get(
+        {
+          param: {
+            id: userId.toString(),
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const memberships = response.ok
+        ? (await response.json()).data.memberships
+        : [];
+
+      return memberships;
     },
+    ["memberships"],
     {
-      headers: {
-        Authorization: `Bearer ${await getToken()}`,
-      },
+      revalidate: 3600,
+      tags: ["memberships"],
     }
   );
 
-  const memberships = response.ok
-    ? (await response.json()).data.memberships
-    : [];
-
-  console.log(memberships);
-
-  //   const memberships = await response.json();
+  const memberships = await getMemberships(await getToken(), sessionClaims);
 
   return (
     <SidebarProvider>

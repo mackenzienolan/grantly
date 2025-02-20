@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 export function TypographyH1({ children }: { children: React.ReactNode }) {
   return (
     <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
@@ -27,8 +29,18 @@ export function TypographyH4({ children }: { children: React.ReactNode }) {
     </h4>
   );
 }
-export function TypographyP({ children }: { children: React.ReactNode }) {
-  return <p className="leading-7 [&:not(:first-child)]:mt-6">{children}</p>;
+export function TypographyP({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <p className={cn("leading-7 [&:not(:first-child)]:mt-6", className)}>
+      {children}
+    </p>
+  );
 }
 export function TypographyBlockquote({
   children,

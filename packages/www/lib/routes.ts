@@ -19,6 +19,8 @@ const routes = {
     },
     features: {
       root: "/app/features",
+      create: "/app/features/create",
+      view: (id: string) => `/app/features/${id}`,
     },
     products: {
       root: "/app/products",
