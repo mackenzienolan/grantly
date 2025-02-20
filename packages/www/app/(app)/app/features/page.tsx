@@ -1,11 +1,26 @@
 import { AppHeader } from "@/components/app-header";
 import { Button } from "@/components/ui/button";
+import { client } from "@/lib/client";
 import routes from "@/lib/routes";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
-export default function Features() {
+export default async function Features() {
+  const { getToken } = await auth();
+  const token = await getToken();
+  const response = await client.features.$get(
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const features = response.ok ? (await response.json()).data.features : [];
+
   return (
     <div>
       <AppHeader
@@ -20,7 +35,7 @@ export default function Features() {
         ]}
       />
       <div className="p-4">
-        <DataTable columns={columns} data={[]} />
+        <DataTable columns={columns} data={features} />
       </div>
     </div>
   );

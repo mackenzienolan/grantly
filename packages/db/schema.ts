@@ -97,16 +97,6 @@ export const productsTable = pgTable("products", {
 });
 
 export const featureTypes = pgEnum("feature_types", ["boolean", "metered"]);
-
-export const featuresTable = pgTable("features", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  type: featureTypes("type").notNull(),
-  description: varchar({ length: 255 }),
-  teamId: varchar({ length: 255 }),
-  ...timestamps,
-});
-
 export const featureResetPeriods = pgEnum("feature_reset_periods", [
   "daily",
   "weekly",
@@ -116,13 +106,13 @@ export const featureResetPeriods = pgEnum("feature_reset_periods", [
   "billing_period",
 ]);
 
-export const featureVariantsTable = pgTable("feature_variants", {
+export const featuresTable = pgTable("features", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  featureId: integer("feature_id"),
   name: varchar({ length: 255 }).notNull(),
   description: varchar({ length: 255 }),
+  type: featureTypes("type").notNull(),
   quota: integer("quota"),
-  resetPeriod: featureResetPeriods("reset_period"),
+  resetPeriod: featureResetPeriods("reset_period").default("billing_period"),
   teamId: varchar({ length: 255 }),
   ...timestamps,
 });

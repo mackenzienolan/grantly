@@ -1,9 +1,16 @@
+import { client } from "@/lib/client";
+
 export async function getFeatures({ token }: { token: string | null }) {
-  if (!token) {
-    return [];
-  }
+  const response = await client.features.$get(
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-  const featuresRes = null;
-
-  return featuresRes;
+  return response.ok ? (await response.json()).data.features : [];
 }
+
+export type GetFeaturesResponse = Awaited<ReturnType<typeof getFeatures>>;
