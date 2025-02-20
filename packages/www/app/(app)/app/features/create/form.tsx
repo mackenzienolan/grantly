@@ -19,47 +19,16 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { TypographyP } from "@/components/ui/typography";
+import { TypographyH1, TypographyH3 } from "@/components/ui/typography";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { title } from "radash";
+import { Edit2, Plus, Save, X } from "lucide-react";
+import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
-
-const resetPeriodSchema = z.enum([
-  "daily",
-  "weekly",
-  "monthly",
-  "yearly",
-  "never",
-  "billing_period",
-]);
-const variantSchema = z
-  .object({
-    name: z.string().min(1),
-    description: z.string().optional(),
-    type: z.literal("boolean"),
-    resetPeriod: resetPeriodSchema,
-    isEditing: z.boolean(),
-  })
-  .or(
-    z.object({
-      name: z.string().min(1),
-      description: z.string().optional(),
-      type: z.literal("metered"),
-      quota: z.number().optional(),
-      resetPeriod: resetPeriodSchema,
-      isEditing: z.boolean(),
-    })
-  );
-
-const formSchema = z.object({
-  name: z.string().min(1),
-  description: z.string().min(1),
-  variants: z.array(variantSchema).min(1),
-  createAnother: z.boolean().optional(),
-});
+import { formSchema } from "./schemas";
 
 export function CreateFeatureForm() {
+  const [editingIndices, setEditingIndices] = useState<Set<number>>(new Set());
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -71,7 +40,6 @@ export function CreateFeatureForm() {
           description: "",
           type: "boolean",
           resetPeriod: "billing_period",
-          isEditing: true,
         },
       ],
     },
@@ -82,17 +50,33 @@ export function CreateFeatureForm() {
     name: "variants",
   });
 
+  const addVariant = () => {
+    variants.append({
+      name: "",
+      description: "",
+      type: "boolean",
+      resetPeriod: "never",
+    });
+    setEditingIndices(new Set([...editingIndices, variants.fields.length]));
+  };
+
+  const startEditing = (index: number) => {
+    setEditingIndices(new Set([...editingIndices, index]));
+  };
+
+  const saveEdit = (index: number) => {
+    setEditingIndices(new Set([...editingIndices].filter((i) => i !== index)));
+  };
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     console.log(data);
   };
 
   return (
     <Form {...form}>
-      <form
-        className="grid grid-cols-2 gap-4"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <div>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="space-y-4">
+          <TypographyH1>Create Feature</TypographyH1>
           <FormField
             control={form.control}
             name="name"
@@ -117,65 +101,25 @@ export function CreateFeatureForm() {
               </FormItem>
             )}
           />
-          <section id="variants">
-            <TypographyP className="font-bold">Variants</TypographyP>
-            {variants.fields.map((field, index) => {
-              if (!field.isEditing) {
-                return (
-                  <div
-                    key={field.id}
-                    className="flex flex-row justify-between gap-2"
-                  >
-                    <div className="flex flex-row gap-2 my-auto">
-                      <TypographyP>{field.name}</TypographyP>
-                      <TypographyP className="text-sm text-muted-foreground">
-                        {field.description}
-                      </TypographyP>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        field.isEditing = true;
-                      }}
-                    >
-                      Edit
-                    </Button>
-                  </div>
-                );
-              }
-              return (
-                <div
-                  key={field.id}
-                  className="p-4 space-y-2 mt-2 border rounded-md"
-                >
-                  <div className="grid grid-cols-2 gap-4">
+          <Separator />
+          <div>
+            <TypographyH3>Variants</TypographyH3>
+            {variants.fields.map((field, index) => (
+              <div key={field.id} className="flex items-center space-x-2 mb-2">
+                {editingIndices.has(index) ? (
+                  <>
                     <FormField
                       control={form.control}
                       name={`variants.${index}.name`}
-                      render={() => (
+                      render={({ field }) => (
                         <FormItem>
                           <FormLabel>Name</FormLabel>
                           <FormControl>
-                            <Input className="mt-1" {...field} />
+                            <Input {...field} />
                           </FormControl>
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={form.control}
-                      name={`variants.${index}.description`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Description</FormLabel>
-                          <FormControl>
-                            <Input className="mt-1" {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name={`variants.${index}.type`}
@@ -184,10 +128,10 @@ export function CreateFeatureForm() {
                           <FormLabel>Type</FormLabel>
                           <FormControl>
                             <Select
-                              onValueChange={field.onChange}
                               value={field.value}
+                              onValueChange={field.onChange}
                             >
-                              <SelectTrigger className="mt-1">
+                              <SelectTrigger>
                                 <SelectValue placeholder="Select a type" />
                               </SelectTrigger>
                               <SelectContent>
@@ -199,9 +143,7 @@ export function CreateFeatureForm() {
                         </FormItem>
                       )}
                     />
-                  </div>
-                  {form.watch(`variants.${index}.type`) === "metered" && (
-                    <div className="grid grid-cols-2 gap-4">
+                    {form.watch(`variants.${index}.type`) === "metered" && (
                       <FormField
                         control={form.control}
                         name={`variants.${index}.quota`}
@@ -210,95 +152,73 @@ export function CreateFeatureForm() {
                           <FormItem>
                             <FormLabel>Quota</FormLabel>
                             <FormControl>
-                              <Input
-                                className="mt-1"
-                                type="number"
-                                {...field}
-                              />
+                              <Input {...field} />
                             </FormControl>
                           </FormItem>
                         )}
                       />
-                      <FormField
-                        control={form.control}
-                        name={`variants.${index}.resetPeriod`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Reset Period</FormLabel>
-                            <FormControl>
-                              <Select
-                                onValueChange={field.onChange}
-                                value={field.value}
-                              >
-                                <SelectTrigger className="mt-1">
-                                  <SelectValue placeholder="Select a reset period" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {resetPeriodSchema.options.map((option) => (
-                                    <SelectItem key={option} value={option}>
-                                      {title(option)}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
+                    )}
+                    <div>
+                      <Button
+                        type="button"
+                        size="icon"
+                        onClick={() => saveEdit(index)}
+                      >
+                        <Save className="h-4 w-4" />
+                      </Button>
                     </div>
-                  )}
-
-                  {/* Remove Variant Button */}
-                  {variants.fields.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => variants.remove(index)}
-                      className="px-3 py-1 mt-2 text-white bg-red-500 rounded"
-                    >
-                      Remove Variant
-                    </button>
-                  )}
+                  </>
+                ) : (
+                  <>
+                    <span className="flex-grow">{field.name}</span>
+                    <span className="flex-grow">{field.description}</span>
+                    <div>
+                      <Button
+                        type="button"
+                        size="icon"
+                        onClick={() => startEditing(index)}
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </>
+                )}
+                <div>
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="destructive"
+                    onClick={() => variants.remove(index)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
                 </div>
-              );
-            })}
-            <div className="flex justify-end">
-              <Button
-                variant="ghost"
-                type="button"
-                className="mt-2"
-                onClick={() => {
-                  variants.append({
-                    name: "",
-                    description: "",
-                    type: "boolean",
-                    resetPeriod: "never",
-                    isEditing: true,
-                  });
-                }}
-              >
-                Add Variant
-              </Button>
-            </div>
-          </section>
+              </div>
+            ))}
+            <Button type="button" onClick={addVariant} className="mt-2">
+              <Plus className="h-4 w-4 mr-2" /> Add Variant
+            </Button>
+          </div>
           <Separator />
-          <FormField
-            control={form.control}
-            name="createAnother"
-            render={({ field }) => (
-              <FormItem className="flex flex-row gap-2 py-2">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <FormLabel>Create Another</FormLabel>
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Create</Button>
+          <div>
+            <FormField
+              control={form.control}
+              name="createAnother"
+              render={({ field }) => (
+                <FormItem className="flex flex-row gap-2 py-2">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel>Create Another</FormLabel>
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Create</Button>
+          </div>
         </div>
-        <div>This is where we should show variants</div>
       </form>
     </Form>
   );
