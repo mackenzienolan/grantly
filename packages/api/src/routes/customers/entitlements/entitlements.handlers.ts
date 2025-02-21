@@ -1,15 +1,18 @@
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
-import type { AppRouteHandler } from "../../lib/types";
+import type { AppRouteHandler } from "../../../lib/types";
 
 import { db } from "@grantly/db";
-import { featuresTable } from "@grantly/db/schema";
 import { getAuth } from "@hono/clerk-auth";
 import { ZodError } from "zod";
-import type { CreateFeatureRoute, FeaturesListRoute } from "./features.routes";
-import { nanoid } from "nanoid";
+import type {
+  ListEntitlementsRoute,
+  GetEntitlementRoute,
+} from "./entitlements.routes";
 
-export const featuresList: AppRouteHandler<FeaturesListRoute> = async (c) => {
+export const listEntitlements: AppRouteHandler<ListEntitlementsRoute> = async (
+  c
+) => {
   const auth = getAuth(c);
 
   const orgId = auth?.orgId;
@@ -22,16 +25,18 @@ export const featuresList: AppRouteHandler<FeaturesListRoute> = async (c) => {
     );
   }
 
+  const { id: customerId } = c.req.valid("param");
+
   try {
-    const featureResults = await db.query.featuresTable.findMany({
-      where: (feat, { eq, and }) => and(eq(feat.teamId, orgId)),
+    const entitlementResults = await db.query.entitlementsTable.findMany({
+      where: (et, { and, eq }) => and(eq(et.customerId, customerId)),
     });
 
     return c.json(
       {
-        message: "Features list",
+        message: "Customers entitlements list",
         data: {
-          features: featureResults,
+          entitlements: entitlementResults,
         },
       },
       HttpStatusCodes.OK
@@ -48,7 +53,9 @@ export const featuresList: AppRouteHandler<FeaturesListRoute> = async (c) => {
   }
 };
 
-export const createFeature: AppRouteHandler<CreateFeatureRoute> = async (c) => {
+export const getEntitlement: AppRouteHandler<GetEntitlementRoute> = async (
+  c
+) => {
   const auth = getAuth(c);
 
   const orgId = auth?.orgId;
@@ -62,34 +69,26 @@ export const createFeature: AppRouteHandler<CreateFeatureRoute> = async (c) => {
   }
 
   try {
-    const { name, description, type, quota, resetPeriod, key } =
-      c.req.valid("json");
+    const { id: customerId, entitlementId } = c.req.valid("param");
 
-    const featuresInsert = {
-      uid: nanoid(),
-      name,
-      description,
-      teamId: orgId,
-      key,
-      type,
-      quota,
-      resetPeriod,
-    } satisfies typeof featuresTable.$inferInsert;
-    const feature = await db
-      .insert(featuresTable)
-      .values(featuresInsert)
-      .returning({
-        uid: featuresTable.uid,
-      });
+    const entitlementResult = await db.query.entitlementsTable.findFirst({
+      where: (et, { eq, and }) =>
+        and(eq(et.customerId, customerId), eq(et.id, Number(entitlementId))),
+    });
+
+    if (!entitlementResult) {
+      return c.json(
+        { message: "Customer entitlement not found" },
+        HttpStatusCodes.NOT_FOUND
+      );
+    }
 
     return c.json(
       {
-        message: "Feature created",
-        feature: {
-          id: feature[0].uid,
-        },
+        message: "Customer entitlement",
+        data: { entitlement: entitlementResult },
       },
-      HttpStatusCodes.CREATED
+      HttpStatusCodes.OK
     );
   } catch (err) {
     c.var.logger.error(err);

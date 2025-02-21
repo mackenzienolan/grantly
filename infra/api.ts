@@ -9,6 +9,19 @@ export const apiFn = new sst.aws.Function("api", {
   link: [postgres, bus, ...API_SECRETS],
 });
 
+export const publicApiFn = new sst.aws.Function("publicApi", {
+  url: true,
+  handler: "packages/functions/src/api/public.handler",
+  runtime: "nodejs22.x",
+  link: [postgres, bus, ...API_SECRETS],
+});
+
+export const publicApiRouter = new sst.aws.Router("publicApiRouter", {
+  routes: {
+    "/*": publicApiFn.url,
+  },
+});
+
 export const apiRouter = new sst.aws.Router("apiRouter", {
   routes: {
     "/*": apiFn.url,

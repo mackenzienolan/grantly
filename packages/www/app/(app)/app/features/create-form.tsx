@@ -8,6 +8,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -28,6 +29,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { createFeature } from "./actions";
 import { featureTypeSchema, formSchema, resetPeriodSchema } from "./schemas";
+import { title } from "radash";
 
 export function CreateFeatureForm({
   onSuccess,
@@ -39,6 +41,7 @@ export function CreateFeatureForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      key: "",
       description: "",
       type: "boolean",
       resetPeriod: "billing_period",
@@ -81,8 +84,33 @@ export function CreateFeatureForm({
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input
+                    className="mt-1"
+                    {...field}
+                    onBlur={() => {
+                      if (field.value && !form.watch("key")) {
+                        form.setValue(
+                          "key",
+                          field.value.toLowerCase().replace(/ /g, "_")
+                        );
+                      }
+                    }}
+                  />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="key"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Key</FormLabel>
+                <FormControl>
+                  <Input {...field} className="mt-1" />
+                </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -93,8 +121,9 @@ export function CreateFeatureForm({
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Textarea {...field} />
+                  <Textarea {...field} className="mt-1" />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -106,13 +135,13 @@ export function CreateFeatureForm({
                 <FormLabel>Type</FormLabel>
                 <FormControl>
                   <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
+                    <SelectTrigger className="mt-1">
                       <SelectValue placeholder="Select a type" />
                     </SelectTrigger>
                     <SelectContent>
                       {featureTypeSchema.options.map((option) => (
                         <SelectItem key={option} value={option}>
-                          {option}
+                          {title(option)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -131,7 +160,7 @@ export function CreateFeatureForm({
                   <FormItem>
                     <FormLabel>Quota</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} className="mt-1" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -147,13 +176,13 @@ export function CreateFeatureForm({
                         value={field.value}
                         onValueChange={field.onChange}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="mt-1">
                           <SelectValue placeholder="Select a reset period" />
                         </SelectTrigger>
                         <SelectContent>
                           {resetPeriodSchema.options.map((option) => (
                             <SelectItem key={option} value={option}>
-                              {option}
+                              {title(option)}
                             </SelectItem>
                           ))}
                         </SelectContent>
