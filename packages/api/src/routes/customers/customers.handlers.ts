@@ -6,10 +6,9 @@ import { db } from "@grantly/db";
 import { featuresTable } from "@grantly/db/schema";
 import { getAuth } from "@hono/clerk-auth";
 import { ZodError } from "zod";
-import type { CreateFeatureRoute, FeaturesListRoute } from "./features.routes";
-import { nanoid } from "nanoid";
+import type { ListCustomersRoute, GetCustomerRoute } from "./customers.routes";
 
-export const featuresList: AppRouteHandler<FeaturesListRoute> = async (c) => {
+export const listCustomers: AppRouteHandler<ListCustomersRoute> = async (c) => {
   const auth = getAuth(c);
 
   const orgId = auth?.orgId;
@@ -23,15 +22,15 @@ export const featuresList: AppRouteHandler<FeaturesListRoute> = async (c) => {
   }
 
   try {
-    const featureResults = await db.query.featuresTable.findMany({
-      where: (feat, { eq, and }) => and(eq(feat.teamId, orgId)),
+    const customerResults = await db.query.customersTable.findMany({
+      where: (cust, { eq, and }) => and(eq(cust.teamId, orgId)),
     });
 
     return c.json(
       {
-        message: "Features list",
+        message: "Customers list",
         data: {
-          features: featureResults,
+          customers: customerResults,
         },
       },
       HttpStatusCodes.OK
@@ -48,7 +47,7 @@ export const featuresList: AppRouteHandler<FeaturesListRoute> = async (c) => {
   }
 };
 
-export const createFeature: AppRouteHandler<CreateFeatureRoute> = async (c) => {
+export const getCustomer: AppRouteHandler<GetCustomerRoute> = async (c) => {
   const auth = getAuth(c);
 
   const orgId = auth?.orgId;
@@ -62,34 +61,25 @@ export const createFeature: AppRouteHandler<CreateFeatureRoute> = async (c) => {
   }
 
   try {
-    const { name, description, type, quota, resetPeriod, key } =
-      c.req.valid("json");
+    const { id } = c.req.valid("param");
 
-    const featuresInsert = {
-      uid: nanoid(),
-      name,
-      description,
-      teamId: orgId,
-      key,
-      type,
-      quota,
-      resetPeriod,
-    } satisfies typeof featuresTable.$inferInsert;
-    const feature = await db
-      .insert(featuresTable)
-      .values(featuresInsert)
-      .returning({
-        uid: featuresTable.uid,
-      });
+    const customer = await db.query.customersTable.findFirst({
+      where: (cust, { eq }) => eq(cust.externalId, id),
+    });
+
+    if (!customer) {
+      return c.json(
+        { message: "Customer not found" },
+        HttpStatusCodes.NOT_FOUND
+      );
+    }
 
     return c.json(
       {
-        message: "Feature created",
-        feature: {
-          id: feature[0].uid,
-        },
+        message: "Customer",
+        data: { customer },
       },
-      HttpStatusCodes.CREATED
+      HttpStatusCodes.OK
     );
   } catch (err) {
     c.var.logger.error(err);

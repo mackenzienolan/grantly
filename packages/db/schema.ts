@@ -111,25 +111,31 @@ export const featureResetPeriods = pgEnum("feature_reset_periods", [
   "billing_period",
 ]);
 
-export const featuresTable = pgTable("features", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  description: varchar({ length: 255 }),
-  type: featureTypes("type").notNull(),
-  quota: integer("quota"),
-  resetPeriod: featureResetPeriods("reset_period").default("billing_period"),
-  teamId: varchar({ length: 255 }),
-  ...timestamps,
-});
+export const featuresTable = pgTable(
+  "features",
+  {
+    uid: varchar("uid", { length: 255 }).notNull(),
+    name: varchar({ length: 255 }).notNull(),
+    key: varchar({ length: 255 }).notNull(),
+    description: varchar({ length: 255 }),
+    type: featureTypes("type").notNull(),
+    quota: integer("quota"),
+    resetPeriod: featureResetPeriods("reset_period").default("billing_period"),
+    teamId: varchar({ length: 255 }),
+    ...timestamps,
+  },
+  (t) => [primaryKey({ columns: [t.teamId, t.key] })]
+);
 
 export const productFeaturesTable = pgTable(
   "product_features",
   {
     productId: integer(),
     featureId: integer(),
+    teamId: varchar({ length: 255 }).notNull(),
     ...timestamps,
   },
-  (t) => [primaryKey({ columns: [t.productId, t.featureId] })]
+  (t) => [primaryKey({ columns: [t.productId, t.featureId, t.teamId] })]
 );
 
 export const customersTable = pgTable(
@@ -142,15 +148,41 @@ export const customersTable = pgTable(
   (t) => [primaryKey({ columns: [t.externalId, t.teamId] })]
 );
 
-export const entitlementsTable = pgTable("entitlements", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  customerId: varchar({ length: 255 }).notNull(),
-  teamId: varchar({ length: 255 }),
-  featureId: integer(),
-  expiresAt: timestamp("expires_at"),
-  quotaUsed: integer().notNull().default(0),
-  ...timestamps,
-});
+export const meterEventTypes = pgEnum("meter_event_types", [
+  "increment",
+  "decrement",
+]);
+
+export const meterEventsTable = pgTable(
+  "meter_events",
+  {
+    id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    eventId: varchar({ length: 255 }).notNull(),
+    eventType: meterEventTypes("event_type").notNull(),
+    amount: integer().notNull(),
+    featureKey: varchar({ length: 255 }).notNull(),
+    teamId: varchar({ length: 255 }).notNull(),
+    customerId: varchar({ length: 255 }).notNull(),
+    ...timestamps,
+  },
+  (t) => [unique().on(t.eventId, t.teamId)]
+);
+
+export const entitlementsTable = pgTable(
+  "entitlements",
+  {
+    id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    uid: varchar("uid", { length: 255 }).notNull(),
+    customerId: varchar({ length: 255 }).notNull(),
+    teamId: varchar({ length: 255 }).notNull(),
+    featureKey: varchar({ length: 255 }).notNull(),
+    expiresAt: timestamp("expires_at"),
+    quotaUsed: integer().notNull().default(0),
+    resetsAt: timestamp("resets_at"),
+    ...timestamps,
+  },
+  (t) => [unique().on(t.customerId, t.teamId, t.featureKey)]
+);
 
 export const userRelations = relations(usersTable, ({ many }) => ({
   teams: many(teamMembersTable),
@@ -192,8 +224,8 @@ export const productFeatureRelations = relations(
       references: [productsTable.id],
     }),
     feature: one(featuresTable, {
-      fields: [productFeaturesTable.featureId],
-      references: [featuresTable.id],
+      fields: [productFeaturesTable.featureId, productFeaturesTable.teamId],
+      references: [featuresTable.key, featuresTable.teamId],
     }),
   })
 );
@@ -217,7 +249,7 @@ export const entitlementRelations = relations(entitlementsTable, ({ one }) => ({
     references: [customersTable.externalId, customersTable.teamId],
   }),
   feature: one(featuresTable, {
-    fields: [entitlementsTable.featureId],
-    references: [featuresTable.id],
+    fields: [entitlementsTable.featureKey],
+    references: [featuresTable.key],
   }),
 }));

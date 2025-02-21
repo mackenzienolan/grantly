@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { title } from "radash";
 import { GetFeaturesResponse } from "./data";
+import { DateTime } from "luxon";
 
 export const columns: ColumnDef<GetFeaturesResponse[number]>[] = [
   {
@@ -31,9 +32,27 @@ export const columns: ColumnDef<GetFeaturesResponse[number]>[] = [
   {
     accessorKey: "createdAt",
     header: "Created At",
+    cell: ({ row }) => {
+      return (
+        <span suppressHydrationWarning>
+          {DateTime.fromISO(row.getValue("createdAt")).toLocaleString(
+            DateTime.DATE_SHORT
+          )}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "updatedAt",
     header: "Updated At",
+    cell: ({ row }) => {
+      return (
+        <span suppressHydrationWarning>
+          {DateTime.fromISO(row.getValue("updatedAt")).toLocaleString(
+            DateTime.DATE_SHORT
+          )}
+        </span>
+      );
+    },
   },
 ];

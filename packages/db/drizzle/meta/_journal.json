@@ -71,6 +71,13 @@
       "when": 1740083265376,
       "tag": "0009_flimsy_madripoor",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1740149470711,
+      "tag": "0010_absurd_white_queen",
+      "breakpoints": true
     }
   ]
 }

@@ -40,21 +40,26 @@ export const handler = bus.subscriber(
       _clerkRaw: evt.properties.data,
     } satisfies typeof usersTable.$inferInsert;
 
-    const returned = await db
-      .insert(usersTable)
-      .values(insert)
-      .onConflictDoUpdate({
-        target: usersTable.clerkUserId,
-        set: insert,
-      })
-      .returning({
-        returnedId: usersTable.id,
+    try {
+      const returned = await db
+        .insert(usersTable)
+        .values(insert)
+        .onConflictDoUpdate({
+          target: usersTable.clerkUserId,
+          set: insert,
+        })
+        .returning({
+          returnedId: usersTable.id,
+        });
+
+      await client.users.updateUser(userId, {
+        externalId: returned[0].returnedId.toString(),
       });
 
-    await client.users.updateUser(userId, {
-      externalId: returned[0].returnedId.toString(),
-    });
-
-    logger.info({ userId }, "User created. Sync complete.");
+      logger.info({ userId }, "User created. Sync complete.");
+    } catch (err) {
+      logger.error(err);
+      throw err;
+    }
   })
 );
