@@ -2,15 +2,15 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { title } from "radash";
-
-export const columns: ColumnDef<unknown>[] = [
+import { GetProductsResponse } from "./data";
+export const columns: ColumnDef<GetProductsResponse[number]>[] = [
   {
     accessorKey: "name",
-    header: "Feature",
+    header: "Product",
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "externalId",
+    header: "External ID",
   },
   {
     accessorKey: "type",
