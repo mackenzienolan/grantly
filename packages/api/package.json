@@ -19,14 +19,17 @@
     "drizzle-zod": "catalog:drizzle",
     "hono": "catalog:hono",
     "hono-pino": "0.7.2",
+    "luxon": "^3.5.0",
     "pino": "9.6.0",
     "pino-pretty": "13.0.0",
     "stoker": "1.4.2",
+    "stripe": "^17.6.0",
     "svix": "1.57.0",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@tsconfig/node22": "^22.0.0"
+    "@tsconfig/node22": "^22.0.0",
+    "@types/luxon": "^3.4.2"
   },
   "scripts": {
     "clean": "npx rimraf node_modules",

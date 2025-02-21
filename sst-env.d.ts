@@ -33,6 +33,10 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
+    "STRIPE_SECRET_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "api": {
       "name": string
       "type": "sst.aws.Function"

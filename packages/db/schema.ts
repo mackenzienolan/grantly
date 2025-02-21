@@ -12,6 +12,7 @@ import {
   pgTable,
   primaryKey,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
@@ -61,21 +62,25 @@ export const integrationStatus = pgEnum("integration_status", [
 
 export const integrationTypes = pgEnum("integration_types", [
   "stripe",
-  "lemonsqueezy",
+  // "lemonsqueezy",
 ]);
 
-export const integrationsTable = pgTable("integrations", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  teamId: integer(),
-  status: integrationStatus("status").notNull(),
-  type: integrationTypes("type").notNull(),
-  accessToken: varchar({ length: 255 }).notNull(),
-  accessTokenExpiresAt: timestamp("access_token_expires_at").notNull(),
-  refreshToken: varchar({ length: 255 }).notNull(),
-  refreshTokenExpiresAt: timestamp("refresh_token_expires_at").notNull(),
-  ...timestamps,
-});
+export const integrationsTable = pgTable(
+  "integrations",
+  {
+    id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    teamId: varchar({ length: 255 }),
+    status: integrationStatus("status").notNull(),
+    type: integrationTypes("type").notNull(),
+    accessToken: varchar({ length: 255 }),
+    accessTokenExpiresAt: timestamp("access_token_expires_at"),
+    refreshToken: varchar({ length: 255 }),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+    _raw: jsonb("raw"),
+    ...timestamps,
+  },
+  (t) => [unique().on(t.teamId, t.type)]
+);
 
 export const teamMembersTable = pgTable("team_members", {
   id: varchar({ length: 255 }).primaryKey(),
@@ -173,6 +178,10 @@ export const integrationRelations = relations(integrationsTable, ({ one }) => ({
     fields: [integrationsTable.teamId],
     references: [teamsTable.id],
   }),
+}));
+
+export const productRelations = relations(productsTable, ({ many }) => ({
+  features: many(productFeaturesTable),
 }));
 
 export const productFeatureRelations = relations(
