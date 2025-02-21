@@ -59,6 +59,15 @@ declare module "sst" {
       "type": "sst.aws.Postgres"
       "username": string
     }
+    "publicApi": {
+      "name": string
+      "type": "sst.aws.Function"
+      "url": string
+    }
+    "publicApiRouter": {
+      "type": "sst.aws.Router"
+      "url": string
+    }
     "vpc": {
       "type": "sst.aws.Vpc"
     }

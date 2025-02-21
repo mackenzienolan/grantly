@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 
 const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-ibm-plex-mono",
@@ -22,6 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          crossOrigin="anonymous"
+          src="https://unpkg.com/react-scan/dist/auto.global.js"
+        />
+      </head>
       <body className={`${ibmPlexMono.variable} antialiased`}>
         <Toaster />
         <ClerkProvider>{children}</ClerkProvider>
