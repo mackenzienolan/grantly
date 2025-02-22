@@ -16,6 +16,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
+import { omit } from "radash";
 
 const timestamps = {
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -25,6 +26,8 @@ const timestamps = {
     .$onUpdate(() => new Date()),
   deletedAt: timestamp("deleted_at"),
 };
+
+const timestampsHardDelete = omit(timestamps, ["deletedAt"]);
 
 export const usersTable = pgTable("users", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
@@ -183,6 +186,17 @@ export const entitlementsTable = pgTable(
   },
   (t) => [unique().on(t.customerId, t.teamId, t.featureKey)]
 );
+
+export const keyTypes = pgEnum("key_types", ["api_key", "publishable_key"]);
+export const keysTable = pgTable("keys", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  key: varchar({ length: 255 }).notNull(),
+  description: varchar({ length: 255 }).notNull(),
+  type: keyTypes("type").notNull(),
+  teamId: varchar({ length: 255 }).notNull(),
+  createdBy: integer("created_by").notNull(),
+  expiresAt: timestamp("expires_at"),
+});
 
 export const userRelations = relations(usersTable, ({ many }) => ({
   teams: many(teamMembersTable),
