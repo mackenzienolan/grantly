@@ -6,6 +6,7 @@ const router = createRouter()
   .openapi(routes.createKey, handlers.createKey)
   .openapi(routes.listKeys, handlers.listKeys)
   .openapi(routes.deleteKey, handlers.deleteKey)
-  .openapi(routes.rotateKey, handlers.rotateKey);
+  .openapi(routes.rotateKey, handlers.rotateKey)
+  .openapi(routes.deleteKeys, handlers.deleteKeys);
 
 export default router;

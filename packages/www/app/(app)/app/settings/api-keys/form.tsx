@@ -22,6 +22,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { schema, type Schema, keyTypes } from "./models";
 import { createApiKey } from "./actions";
+import { Typography } from "@/components/typography";
+import { Copy } from "lucide-react";
 
 export function ApiKeyForm({
   apiKeyExists,
@@ -56,17 +58,19 @@ export function ApiKeyForm({
         <Alert variant="default">
           <AlertTitle>Key created successfully</AlertTitle>
           <AlertDescription>
-            Your new key is: <code className="font-mono">{key}</code>
+            Your new key is:{" "}
+            <Button
+              variant="ghost"
+              className="!p-0"
+              onClick={() => {
+                navigator.clipboard.writeText(key);
+                toast.success("Key copied to clipboard");
+              }}
+            >
+              <Typography variant="code">{key}</Typography>{" "}
+              <Copy className="size-4" />
+            </Button>
           </AlertDescription>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              navigator.clipboard.writeText(key);
-              toast.success("Key copied to clipboard");
-            }}
-          >
-            Copy to clipboard
-          </Button>
         </Alert>
         <Button onClick={onClose}>I&apos;ve copied the key</Button>
       </div>

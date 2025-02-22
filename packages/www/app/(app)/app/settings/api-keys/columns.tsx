@@ -2,9 +2,35 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { DateTime } from "luxon";
-import { ListApiKeysResponse } from "./data";
+import { Button } from "@/components/ui/button";
+import { Copy } from "lucide-react";
+import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DataItem } from "./models";
 
-export const columns: ColumnDef<ListApiKeysResponse[number]>[] = [
+export const columns: ColumnDef<DataItem>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "type",
     header: "Type",
@@ -19,7 +45,19 @@ export const columns: ColumnDef<ListApiKeysResponse[number]>[] = [
     cell: ({ row }) => {
       return (
         <span suppressHydrationWarning>
-          {row.getValue("key") ?? "*****************************"}
+          {row.getValue("key") ?? "*****************************"}{" "}
+          {row.getValue("key") ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                navigator.clipboard.writeText(row.getValue("key"));
+                toast.success("Key copied to clipboard");
+              }}
+            >
+              <Copy className="size-4" />
+            </Button>
+          ) : null}
         </span>
       );
     },

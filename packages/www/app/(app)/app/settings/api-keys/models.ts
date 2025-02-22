@@ -1,5 +1,5 @@
 import { z } from "zod";
-
+import { type ListApiKeysResponse } from "./data";
 export type Count = {
   api_key: number;
   publishable_key: number;
@@ -14,3 +14,5 @@ export const schema = z.object({
 });
 
 export type Schema = z.infer<typeof schema>;
+
+export type DataItem = ListApiKeysResponse[number];

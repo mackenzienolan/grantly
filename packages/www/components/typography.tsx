@@ -28,6 +28,8 @@ function getClassNameForType(type: TypographyTypes) {
       return "mt-6 border-l-2 pl-6 italic";
     case "list":
       return "my-6 ml-6 list-disc [&>li]:mt-2";
+    case "code":
+      return "bg-black text-white font-mono py-1 px-2 rounded-lg overflow-x-auto";
   }
 }
 
@@ -80,7 +82,9 @@ export function Typography({
         );
       case "code":
         return (
-          <code className={cn(generatedClassName, className)}>{children}</code>
+          <pre className={cn(generatedClassName, className)}>
+            <code>{children}</code>
+          </pre>
         );
       default:
         return;
