@@ -17,12 +17,7 @@ export const userTeams: AppRouteHandler<UserTeamsRoute> = async (c) => {
     );
   }
 
-  console.log(auth);
-
   const userId = Number(auth.sessionClaims?.["external_id"]);
-
-  console.log(userId, id);
-
   if (!userId) {
     return c.json(
       { message: HttpStatusPhrases.UNAUTHORIZED },
@@ -44,8 +39,6 @@ export const userTeams: AppRouteHandler<UserTeamsRoute> = async (c) => {
       team: true,
     },
   });
-
-  console.log("hi");
 
   return c.json(
     {

@@ -62,14 +62,59 @@ export const listKeys = createRoute({
         data: z.object({
           keys: z.array(
             z.object({
+              id: z.number(),
               type: z.enum(["api_key", "publishable_key"]),
               description: z.string(),
               key: z.string().optional(),
+              createdAt: z.string().datetime(),
             })
           ),
         }),
       }),
       "Keys listed"
+    ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      z.object({
+        message: z.string(),
+      }),
+      "Unauthorized"
+    ),
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
+      z.object({
+        message: z.string(),
+      }),
+      "Internal server error"
+    ),
+    [HttpStatusCodes.BAD_REQUEST]: jsonContent(
+      z.object({
+        message: z.string(),
+      }),
+      "Bad request"
+    ),
+  },
+});
+
+export const deleteKeys = createRoute({
+  path: "/keys",
+  method: "delete",
+  tags,
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            ids: z.array(z.number()),
+          }),
+        },
+      },
+    },
+  },
+  responses: {
+    [HttpStatusCodes.OK]: jsonContent(
+      z.object({
+        message: z.string(),
+      }),
+      "Keys deleted"
     ),
     [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
       z.object({
@@ -179,3 +224,4 @@ export type RotateKeyRoute = typeof rotateKey;
 export type DeleteKeyRoute = typeof deleteKey;
 export type ListKeysRoute = typeof listKeys;
 export type CreateKeyRoute = typeof createKey;
+export type DeleteKeysRoute = typeof deleteKeys;

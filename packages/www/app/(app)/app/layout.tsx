@@ -44,7 +44,7 @@ export default async function AppLayout({
     },
     ["memberships"],
     {
-      revalidate: 3600,
+      revalidate: 60 * 60,
       tags: ["memberships"],
     }
   );

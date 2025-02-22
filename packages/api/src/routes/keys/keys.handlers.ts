@@ -2,7 +2,7 @@ import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
 import type { AppRouteHandler } from "../../lib/types";
 import { hashKey } from "@grantly/utils/server";
-import { eq, and } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
 import { db, keysTable } from "@grantly/db";
 import { getAuth } from "@hono/clerk-auth";
 import type {
@@ -10,6 +10,7 @@ import type {
   RotateKeyRoute,
   DeleteKeyRoute,
   ListKeysRoute,
+  DeleteKeysRoute,
 } from "./keys.routes";
 import { nanoid } from "nanoid";
 
@@ -31,7 +32,7 @@ export const createKey: AppRouteHandler<CreateKeyRoute> = async (c) => {
   try {
     const key = `${type === "api_key" ? "api" : "public"}_${nanoid()}`;
 
-    const hashedKey = hashKey(key);
+    const hashedKey = type === "api_key" ? hashKey(key) : key;
 
     await db.insert(keysTable).values({
       key: hashedKey,
@@ -76,9 +77,11 @@ export const listKeys: AppRouteHandler<ListKeysRoute> = async (c) => {
     });
 
     const parsedKeys = keysList.map((k) => ({
+      id: k.id,
       type: k.type,
       description: k.description,
-      key: k.type === "api_key" ? k.key : undefined,
+      key: k.type === "api_key" ? undefined : k.key,
+      createdAt: k.createdAt,
     }));
 
     return c.json(
@@ -92,6 +95,38 @@ export const listKeys: AppRouteHandler<ListKeysRoute> = async (c) => {
       return c.json({ message: err.message }, HttpStatusCodes.BAD_REQUEST);
     }
 
+    return c.json(
+      { message: HttpStatusPhrases.INTERNAL_SERVER_ERROR },
+      HttpStatusCodes.INTERNAL_SERVER_ERROR
+    );
+  }
+};
+
+export const deleteKeys: AppRouteHandler<DeleteKeysRoute> = async (c) => {
+  const auth = getAuth(c);
+
+  const orgId = auth?.orgId;
+  const userId = Number(auth?.sessionClaims?.["external_id"]);
+
+  if (!auth || !userId || !orgId) {
+    return c.json(
+      { message: HttpStatusPhrases.UNAUTHORIZED },
+      HttpStatusCodes.UNAUTHORIZED
+    );
+  }
+
+  const { ids } = c.req.valid("json");
+
+  try {
+    await db.delete(keysTable).where(inArray(keysTable.id, ids));
+
+    return c.json({ message: "Keys deleted" }, HttpStatusCodes.OK);
+  } catch (err) {
+    c.var.logger.error(err);
+
+    if (err instanceof Error) {
+      return c.json({ message: err.message }, HttpStatusCodes.BAD_REQUEST);
+    }
     return c.json(
       { message: HttpStatusPhrases.INTERNAL_SERVER_ERROR },
       HttpStatusCodes.INTERNAL_SERVER_ERROR

@@ -1,6 +1,6 @@
 "use client";
 
-import { TypographyH1 } from "@/components/ui/typography";
+import { TypographyH1 } from "@/components/typography";
 import { OrganizationList } from "@clerk/nextjs";
 import { useSearchParams } from "next/navigation";
 
