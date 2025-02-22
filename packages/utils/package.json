@@ -1,0 +1,21 @@
+{
+  "name": "@grantly/utils",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": {
+      "types": "./src/server/index.ts",
+      "default": "./src/server/index.ts"
+    }
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.0",
+    "@types/node": "^22.13.5"
+  },
+  "scripts": {
+    "clean": "npx rimraf node_modules",
+    "typecheck": "tsc --noEmit"
+  }
+}
