@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Home, Settings2, SquareTerminal } from "lucide-react";
+import { Home, Settings2, SquareTerminal } from "lucide-react";
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
@@ -58,29 +58,29 @@ const data = {
     //     },
     //   ],
     // },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
+    // {
+    //   title: "Documentation",
+    //   url: "#",
+    //   icon: BookOpen,
+    //   items: [
+    //     {
+    //       title: "Introduction",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Get Started",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Tutorials",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Changelog",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
     {
       title: "Settings",
       url: "#",
@@ -89,6 +89,10 @@ const data = {
         {
           title: "General",
           url: routes.app.settings.general,
+        },
+        {
+          title: "API Keys",
+          url: routes.app.settings.apiKeys,
         },
         {
           title: "Team",

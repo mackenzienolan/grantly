@@ -65,6 +65,7 @@ export const listKeys = createRoute({
               type: z.enum(["api_key", "publishable_key"]),
               description: z.string(),
               key: z.string().optional(),
+              createdAt: z.string().datetime(),
             })
           ),
         }),

@@ -30,6 +30,7 @@ const routes = {
       team: "/app/settings/team",
       billing: "/app/settings/billing",
       limits: "/app/settings/limits",
+      apiKeys: "/app/settings/api-keys",
     },
   },
 } as const;

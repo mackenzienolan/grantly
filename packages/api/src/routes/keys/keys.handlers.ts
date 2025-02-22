@@ -78,7 +78,8 @@ export const listKeys: AppRouteHandler<ListKeysRoute> = async (c) => {
     const parsedKeys = keysList.map((k) => ({
       type: k.type,
       description: k.description,
-      key: k.type === "api_key" ? k.key : undefined,
+      key: k.type === "api_key" ? undefined : k.key,
+      createdAt: k.createdAt,
     }));
 
     return c.json(

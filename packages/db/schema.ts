@@ -133,8 +133,8 @@ export const featuresTable = pgTable(
 export const productFeaturesTable = pgTable(
   "product_features",
   {
-    productId: integer(),
-    featureId: integer(),
+    productId: integer("product_id").notNull(),
+    featureId: integer("feature_id").notNull(),
     teamId: varchar({ length: 255 }).notNull(),
     ...timestamps,
   },
@@ -196,6 +196,7 @@ export const keysTable = pgTable("keys", {
   teamId: varchar({ length: 255 }).notNull(),
   createdBy: integer("created_by").notNull(),
   expiresAt: timestamp("expires_at"),
+  ...timestampsHardDelete,
 });
 
 export const userRelations = relations(usersTable, ({ many }) => ({
@@ -245,7 +246,7 @@ export const productFeatureRelations = relations(
 );
 
 export const featureRelations = relations(featuresTable, ({ one, many }) => ({
-  products: many(productFeaturesTable),
+  // products: many(productFeaturesTable),
   entitlements: many(entitlementsTable),
 }));
 
