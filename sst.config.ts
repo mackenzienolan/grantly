@@ -6,10 +6,11 @@ export default $config({
       providers: {
         aws: {
           profile: input.stage === "prod" ? "grantly-prod" : "grantly-dev",
+          region: "us-east-2",
         },
         "@upstash/pulumi": "0.3.14",
       },
-      removal: input?.stage === "main" ? "retain" : "remove",
+      removal: input.stage === "prod" ? "retain" : "remove",
       home: "aws",
     };
   },

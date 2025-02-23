@@ -51,7 +51,7 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Bus"
     }
-    "postgres": {
+    "postgres-v2": {
       "database": string
       "host": string
       "password": string
@@ -68,7 +68,7 @@ declare module "sst" {
       "type": "sst.aws.Router"
       "url": string
     }
-    "vpc": {
+    "vpc-postgres": {
       "type": "sst.aws.Vpc"
     }
     "www": {
