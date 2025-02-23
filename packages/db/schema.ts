@@ -27,6 +27,8 @@ const timestamps = {
   deletedAt: timestamp("deleted_at"),
 };
 
+const livemode = boolean("livemode").notNull().default(true);
+
 const timestampsHardDelete = omit(timestamps, ["deletedAt"]);
 
 export const usersTable = pgTable("users", {
@@ -101,6 +103,7 @@ export const productsTable = pgTable("products", {
   name: varchar({ length: 255 }).notNull(),
   externalId: varchar({ length: 255 }).notNull(),
   teamId: varchar({ length: 255 }),
+  livemode,
   ...timestamps,
 });
 
@@ -125,6 +128,7 @@ export const featuresTable = pgTable(
     quota: integer("quota"),
     resetPeriod: featureResetPeriods("reset_period").default("billing_period"),
     teamId: varchar({ length: 255 }),
+    livemode,
     ...timestamps,
   },
   (t) => [primaryKey({ columns: [t.teamId, t.key] })]
@@ -146,6 +150,7 @@ export const customersTable = pgTable(
   {
     externalId: varchar({ length: 255 }).notNull(),
     teamId: varchar({ length: 255 }),
+    livemode,
     ...timestamps,
   },
   (t) => [primaryKey({ columns: [t.externalId, t.teamId] })]
@@ -166,6 +171,7 @@ export const meterEventsTable = pgTable(
     featureKey: varchar({ length: 255 }).notNull(),
     teamId: varchar({ length: 255 }).notNull(),
     customerId: varchar({ length: 255 }).notNull(),
+    livemode,
     ...timestamps,
   },
   (t) => [unique().on(t.eventId, t.teamId)]
@@ -196,6 +202,7 @@ export const keysTable = pgTable("keys", {
   teamId: varchar({ length: 255 }).notNull(),
   createdBy: integer("created_by").notNull(),
   expiresAt: timestamp("expires_at"),
+  livemode,
   ...timestampsHardDelete,
 });
 
