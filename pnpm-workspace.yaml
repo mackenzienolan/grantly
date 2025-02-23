@@ -32,5 +32,5 @@ catalog:
   drizzle-orm: "0.39.3"
   drizzle-kit: "0.30.4"
   drizzle-zod: "0.5.1"
-  sst: "3.8.3"
+  sst: "3.9.10"
   zod: "3.24.2"
