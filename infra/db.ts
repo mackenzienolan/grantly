@@ -1,7 +1,6 @@
-export const vpc = new sst.aws.Vpc("vpc", {
-  az: 3,
-});
-export const postgres = new sst.aws.Postgres("postgres", {
+export const vpc = new sst.aws.Vpc("vpc-postgres");
+
+export const postgres = new sst.aws.Postgres("postgres-v2", {
   vpc,
   dev: {
     username: "postgres",

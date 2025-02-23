@@ -5,6 +5,76 @@
 
 declare module "sst" {
   export interface Resource {
+    "CLERK_PUBLISHABLE_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "CLERK_SECRET_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "CLERK_WEBHOOK_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "NEXT_PUBLIC_API_URL": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "PUBLIC_CLERK_PUBLISHABLE_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "REDIS_TOKEN": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "REDIS_URL": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "STRIPE_SECRET_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "api": {
+      "name": string
+      "type": "sst.aws.Function"
+      "url": string
+    }
+    "apiRouter": {
+      "type": "sst.aws.Router"
+      "url": string
+    }
+    "bus": {
+      "arn": string
+      "name": string
+      "type": "sst.aws.Bus"
+    }
+    "postgres-v2": {
+      "database": string
+      "host": string
+      "password": string
+      "port": number
+      "type": "sst.aws.Postgres"
+      "username": string
+    }
+    "publicApi": {
+      "name": string
+      "type": "sst.aws.Function"
+      "url": string
+    }
+    "publicApiRouter": {
+      "type": "sst.aws.Router"
+      "url": string
+    }
+    "vpc-postgres": {
+      "type": "sst.aws.Vpc"
+    }
+    "www": {
+      "type": "sst.aws.Nextjs"
+      "url": string
+    }
   }
 }
 /// <reference path="sst-env.d.ts" />
