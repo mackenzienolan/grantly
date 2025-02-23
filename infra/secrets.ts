@@ -1,7 +1,7 @@
 export const CLERK_PUBLISHABLE_KEY = new sst.Secret(
   "CLERK_PUBLISHABLE_KEY",
   $app.stage === "main"
-    ? "pk_test_aW50ZW5zZS1iYXQtODMuY2xlcmsuYWNjb3VudHMuZGV2JA"
+    ? "pk_live_Y2xlcmsuZ3JhbnRseWFwcC5jb20k"
     : "pk_test_aW50ZW5zZS1iYXQtODMuY2xlcmsuYWNjb3VudHMuZGV2JA"
 );
 

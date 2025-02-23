@@ -1,5 +1,5 @@
 export const redis = new upstash.RedisDatabase("redis", {
-  databaseName: "grantly",
+  databaseName: `grantly-${$app.stage}`,
   region: "global",
   primaryRegion: "us-east-1",
   eviction: true,

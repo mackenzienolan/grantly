@@ -9,15 +9,31 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "GITHUB_CLIENT_ID": {
+    "CLERK_SECRET_KEY": {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "GITHUB_CLIENT_SECRET": {
+    "CLERK_WEBHOOK_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "NEXT_PUBLIC_API_URL": {
       "type": "sst.sst.Secret"
       "value": string
     }
     "PUBLIC_CLERK_PUBLISHABLE_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "REDIS_TOKEN": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "REDIS_URL": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "STRIPE_SECRET_KEY": {
       "type": "sst.sst.Secret"
       "value": string
     }
@@ -30,9 +46,10 @@ declare module "sst" {
       "type": "sst.aws.Router"
       "url": string
     }
-    "auth": {
-      "type": "sst.aws.Auth"
-      "url": string
+    "bus": {
+      "arn": string
+      "name": string
+      "type": "sst.aws.Bus"
     }
     "postgres": {
       "database": string
@@ -42,11 +59,20 @@ declare module "sst" {
       "type": "sst.aws.Postgres"
       "username": string
     }
+    "publicApi": {
+      "name": string
+      "type": "sst.aws.Function"
+      "url": string
+    }
+    "publicApiRouter": {
+      "type": "sst.aws.Router"
+      "url": string
+    }
     "vpc": {
       "type": "sst.aws.Vpc"
     }
     "www": {
-      "type": "sst.aws.Astro"
+      "type": "sst.aws.Nextjs"
       "url": string
     }
   }

@@ -5,7 +5,7 @@ export default $config({
       name: "grantly",
       providers: {
         aws: {
-          profile: input.stage === "main" ? "grantly-prod" : "grantly-dev",
+          profile: "grantly-prod", // input.stage === "prod" ? "grantly-prod" : "grantly-dev",
         },
         "@upstash/pulumi": "0.3.14",
       },
