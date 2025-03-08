@@ -13,6 +13,9 @@ catalogs:
     '@macknolandev/clerk-zod':
       specifier: 1.0.10
       version: 1.0.10
+    drizzle-zod:
+      specifier: 0.5.1
+      version: 0.5.1
     sst:
       specifier: 3.9.10
       version: 3.9.10
@@ -139,17 +142,17 @@ importers:
       '@macknolandev/clerk-zod':
         specifier: 'catalog:'
         version: 1.0.10
-      dotenv:
-        specifier: ^16.4.7
-        version: 16.4.7
       drizzle-orm:
         specifier: catalog:drizzle
         version: 0.39.3(@types/pg@8.11.11)(pg@8.13.1)
-      pg:
-        specifier: ^8.13.1
-        version: 8.13.1
+      drizzle-zod:
+        specifier: 'catalog:'
+        version: 0.5.1(drizzle-orm@0.39.3(@types/pg@8.11.11)(pg@8.13.1))(zod@3.24.2)
+      nanoid:
+        specifier: ^5.0.6
+        version: 5.1.0
       radash:
-        specifier: ^12.1.0
+        specifier: ^12.0.0
         version: 12.1.0
       zod:
         specifier: 'catalog:'
@@ -158,24 +161,33 @@ importers:
       '@tsconfig/node22':
         specifier: ^22.0.0
         version: 22.0.0
-      '@types/pg':
-        specifier: ^8.11.11
-        version: 8.11.11
+      '@types/node':
+        specifier: ^22.13.1
+        version: 22.13.5
       drizzle-kit:
         specifier: catalog:drizzle
         version: 0.30.4
-      tsx:
-        specifier: ^4.19.2
-        version: 4.19.2
+      sst:
+        specifier: 'catalog:'
+        version: 3.9.10
 
   packages/events:
     dependencies:
       '@clerk/backend':
         specifier: catalog:clerk
         version: 1.24.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@grantly/db':
+        specifier: workspace:*
+        version: link:../db
       '@macknolandev/clerk-zod':
         specifier: 'catalog:'
         version: 1.0.10
+      drizzle-orm:
+        specifier: catalog:drizzle
+        version: 0.39.3(@types/pg@8.11.11)(pg@8.13.1)
+      drizzle-zod:
+        specifier: 'catalog:'
+        version: 0.5.1(drizzle-orm@0.39.3(@types/pg@8.11.11)(pg@8.13.1))(zod@3.24.2)
       zod:
         specifier: 'catalog:'
         version: 3.24.2
@@ -195,6 +207,9 @@ importers:
       '@clerk/backend':
         specifier: catalog:clerk
         version: 1.24.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@grantly/db':
+        specifier: workspace:*
+        version: link:../db
       '@macknolandev/clerk-zod':
         specifier: 'catalog:'
         version: 1.0.10
@@ -220,9 +235,6 @@ importers:
       '@grantly/api':
         specifier: workspace:*
         version: link:../api
-      '@grantly/db':
-        specifier: workspace:*
-        version: link:../db
       '@grantly/events':
         specifier: workspace:*
         version: link:../events
@@ -2529,10 +2541,6 @@ packages:
 
   dot-case@3.0.4:
     resolution: {integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==}
-
-  dotenv@16.4.7:
-    resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
-    engines: {node: '>=12'}
 
   drizzle-kit@0.30.4:
     resolution: {integrity: sha512-B2oJN5UkvwwNHscPWXDG5KqAixu7AUzZ3qbe++KU9SsQ+cZWR4DXEPYcvWplyFAno0dhRJECNEhNxiDmFaPGyQ==}
@@ -5918,9 +5926,10 @@ snapshots:
 
   '@types/pg@8.11.11':
     dependencies:
-      '@types/node': 22.13.1
+      '@types/node': 22.13.5
       pg-protocol: 1.7.0
       pg-types: 4.0.2
+    optional: true
 
   '@types/pino@7.0.5':
     dependencies:
@@ -6399,8 +6408,6 @@ snapshots:
       no-case: 3.0.4
       tslib: 2.8.1
 
-  dotenv@16.4.7: {}
-
   drizzle-kit@0.30.4:
     dependencies:
       '@drizzle-team/brocli': 0.10.2
@@ -6631,6 +6638,7 @@ snapshots:
       '@esbuild/win32-arm64': 0.23.1
       '@esbuild/win32-ia32': 0.23.1
       '@esbuild/win32-x64': 0.23.1
+    optional: true
 
   esbuild@0.24.2:
     optionalDependencies:
@@ -7530,7 +7538,8 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
 
-  obuf@1.1.2: {}
+  obuf@1.1.2:
+    optional: true
 
   oidc-token-hash@5.0.3: {}
 
@@ -7602,17 +7611,22 @@ snapshots:
   pg-cloudflare@1.1.1:
     optional: true
 
-  pg-connection-string@2.7.0: {}
+  pg-connection-string@2.7.0:
+    optional: true
 
-  pg-int8@1.0.1: {}
+  pg-int8@1.0.1:
+    optional: true
 
-  pg-numeric@1.0.2: {}
+  pg-numeric@1.0.2:
+    optional: true
 
   pg-pool@3.7.0(pg@8.13.1):
     dependencies:
       pg: 8.13.1
+    optional: true
 
-  pg-protocol@1.7.0: {}
+  pg-protocol@1.7.0:
+    optional: true
 
   pg-types@2.2.0:
     dependencies:
@@ -7621,6 +7635,7 @@ snapshots:
       postgres-bytea: 1.0.0
       postgres-date: 1.0.7
       postgres-interval: 1.2.0
+    optional: true
 
   pg-types@4.0.2:
     dependencies:
@@ -7631,6 +7646,7 @@ snapshots:
       postgres-date: 2.1.0
       postgres-interval: 3.0.0
       postgres-range: 1.1.4
+    optional: true
 
   pg@8.13.1:
     dependencies:
@@ -7641,10 +7657,12 @@ snapshots:
       pgpass: 1.0.5
     optionalDependencies:
       pg-cloudflare: 1.1.1
+    optional: true
 
   pgpass@1.0.5:
     dependencies:
       split2: 4.2.0
+    optional: true
 
   picocolors@1.1.1: {}
 
@@ -7708,27 +7726,36 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postgres-array@2.0.0: {}
+  postgres-array@2.0.0:
+    optional: true
 
-  postgres-array@3.0.2: {}
+  postgres-array@3.0.2:
+    optional: true
 
-  postgres-bytea@1.0.0: {}
+  postgres-bytea@1.0.0:
+    optional: true
 
   postgres-bytea@3.0.0:
     dependencies:
       obuf: 1.1.2
+    optional: true
 
-  postgres-date@1.0.7: {}
+  postgres-date@1.0.7:
+    optional: true
 
-  postgres-date@2.1.0: {}
+  postgres-date@2.1.0:
+    optional: true
 
   postgres-interval@1.2.0:
     dependencies:
       xtend: 4.0.2
+    optional: true
 
-  postgres-interval@3.0.0: {}
+  postgres-interval@3.0.0:
+    optional: true
 
-  postgres-range@1.1.4: {}
+  postgres-range@1.1.4:
+    optional: true
 
   prelude-ls@1.2.1: {}
 
@@ -8295,6 +8322,7 @@ snapshots:
       get-tsconfig: 4.10.0
     optionalDependencies:
       fsevents: 2.3.3
+    optional: true
 
   turbo-darwin-64@2.4.1:
     optional: true
@@ -8594,7 +8622,8 @@ snapshots:
 
   xmlchars@2.2.0: {}
 
-  xtend@4.0.2: {}
+  xtend@4.0.2:
+    optional: true
 
   yallist@3.1.1: {}
 

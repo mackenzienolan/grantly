@@ -15,8 +15,9 @@ import {
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
-import { z } from "zod";
+import { nanoid } from "nanoid";
 import { omit } from "radash";
+import { z } from "zod";
 
 const timestamps = {
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -31,8 +32,15 @@ const livemode = boolean("livemode").notNull().default(true);
 
 const timestampsHardDelete = omit(timestamps, ["deletedAt"]);
 
+// Helper for uid field
+const uid = () =>
+  varchar("uid", { length: 21 })
+    .notNull()
+    .$defaultFn(() => nanoid());
+
 export const usersTable = pgTable("users", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  uid: uid(),
   clerkUserId: varchar({ length: 255 }).notNull().unique(),
   firstName: varchar({ length: 255 }),
   lastName: varchar({ length: 255 }),
@@ -42,38 +50,30 @@ export const usersTable = pgTable("users", {
   primaryPhoneNumber: varchar({ length: 255 }),
   phoneNumbers: jsonb("phone_numbers").notNull(),
   imageUrl: varchar({ length: 255 }),
-  _clerkRaw: jsonb("clerk_raw")
-    .$type<z.infer<typeof UserJSONSchema>>()
-    .notNull(),
+  _clerkRaw: jsonb("clerk_raw").$type<z.infer<typeof UserJSONSchema>>().notNull(),
   ...timestamps,
 });
 
 export const teamsTable = pgTable("teams", {
   id: varchar({ length: 255 }).primaryKey(),
+  uid: uid(),
   name: varchar({ length: 255 }).notNull(),
   slug: varchar({ length: 255 }).notNull(),
   ownerId: integer(),
   onboardingComplete: boolean("onboarding_complete").notNull().default(false),
-  _clerkRaw: jsonb("clerk_raw")
-    .$type<z.infer<typeof OrganizationJSONSchema>>()
-    .notNull(),
+  _clerkRaw: jsonb("clerk_raw").$type<z.infer<typeof OrganizationJSONSchema>>().notNull(),
   ...timestamps,
 });
 
-export const integrationStatus = pgEnum("integration_status", [
-  "active",
-  "inactive",
-]);
+export const integrationStatus = pgEnum("integration_status", ["active", "inactive"]);
 
-export const integrationTypes = pgEnum("integration_types", [
-  "stripe",
-  // "lemonsqueezy",
-]);
+export const integrationTypes = pgEnum("integration_types", ["stripe"]);
 
 export const integrationsTable = pgTable(
   "integrations",
   {
     id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    uid: uid(),
     teamId: varchar({ length: 255 }),
     status: integrationStatus("status").notNull(),
     type: integrationTypes("type").notNull(),
@@ -89,10 +89,9 @@ export const integrationsTable = pgTable(
 
 export const teamMembersTable = pgTable("team_members", {
   id: varchar({ length: 255 }).primaryKey(),
+  uid: uid(),
   role: varchar({ length: 255 }).notNull(),
-  _clerkRaw: jsonb("clerk_raw")
-    .$type<z.infer<typeof OrganizationMembershipJSONSchema>>()
-    .notNull(),
+  _clerkRaw: jsonb("clerk_raw").$type<z.infer<typeof OrganizationMembershipJSONSchema>>().notNull(),
   teamId: varchar({ length: 255 }),
   userId: integer("user_id"),
   ...timestamps,
@@ -100,6 +99,7 @@ export const teamMembersTable = pgTable("team_members", {
 
 export const productsTable = pgTable("products", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  uid: uid(),
   name: varchar({ length: 255 }).notNull(),
   externalId: varchar({ length: 255 }).notNull(),
   teamId: varchar({ length: 255 }),
@@ -120,7 +120,7 @@ export const featureResetPeriods = pgEnum("feature_reset_periods", [
 export const featuresTable = pgTable(
   "features",
   {
-    uid: varchar("uid", { length: 255 }).notNull(),
+    uid: uid(),
     name: varchar({ length: 255 }).notNull(),
     key: varchar({ length: 255 }).notNull(),
     description: varchar({ length: 255 }),
@@ -137,6 +137,7 @@ export const featuresTable = pgTable(
 export const productFeaturesTable = pgTable(
   "product_features",
   {
+    uid: uid(),
     productId: integer("product_id").notNull(),
     featureId: integer("feature_id").notNull(),
     teamId: varchar({ length: 255 }).notNull(),
@@ -148,6 +149,7 @@ export const productFeaturesTable = pgTable(
 export const customersTable = pgTable(
   "customers",
   {
+    uid: uid(),
     externalId: varchar({ length: 255 }).notNull(),
     teamId: varchar({ length: 255 }),
     livemode,
@@ -156,15 +158,13 @@ export const customersTable = pgTable(
   (t) => [primaryKey({ columns: [t.externalId, t.teamId] })]
 );
 
-export const meterEventTypes = pgEnum("meter_event_types", [
-  "increment",
-  "decrement",
-]);
+export const meterEventTypes = pgEnum("meter_event_types", ["increment", "decrement"]);
 
 export const meterEventsTable = pgTable(
   "meter_events",
   {
     id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    uid: uid(),
     eventId: varchar({ length: 255 }).notNull(),
     eventType: meterEventTypes("event_type").notNull(),
     amount: integer().notNull(),
@@ -181,7 +181,7 @@ export const entitlementsTable = pgTable(
   "entitlements",
   {
     id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-    uid: varchar("uid", { length: 255 }).notNull(),
+    uid: uid(),
     customerId: varchar({ length: 255 }).notNull(),
     teamId: varchar({ length: 255 }).notNull(),
     featureKey: varchar({ length: 255 }).notNull(),
@@ -196,6 +196,7 @@ export const entitlementsTable = pgTable(
 export const keyTypes = pgEnum("key_types", ["api_key", "publishable_key"]);
 export const keysTable = pgTable("keys", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  uid: uid(),
   key: varchar({ length: 255 }).notNull(),
   description: varchar({ length: 255 }).notNull(),
   type: keyTypes("type").notNull(),
@@ -238,19 +239,16 @@ export const productRelations = relations(productsTable, ({ many }) => ({
   features: many(productFeaturesTable),
 }));
 
-export const productFeatureRelations = relations(
-  productFeaturesTable,
-  ({ one }) => ({
-    product: one(productsTable, {
-      fields: [productFeaturesTable.productId],
-      references: [productsTable.id],
-    }),
-    feature: one(featuresTable, {
-      fields: [productFeaturesTable.featureId, productFeaturesTable.teamId],
-      references: [featuresTable.key, featuresTable.teamId],
-    }),
-  })
-);
+export const productFeatureRelations = relations(productFeaturesTable, ({ one }) => ({
+  product: one(productsTable, {
+    fields: [productFeaturesTable.productId],
+    references: [productsTable.id],
+  }),
+  feature: one(featuresTable, {
+    fields: [productFeaturesTable.featureId, productFeaturesTable.teamId],
+    references: [featuresTable.key, featuresTable.teamId],
+  }),
+}));
 
 export const featureRelations = relations(featuresTable, ({ one, many }) => ({
   // products: many(productFeaturesTable),

@@ -1,40 +1,40 @@
-"use client";
+'use client';
 
-import { Home, Settings2, SquareTerminal } from "lucide-react";
-import * as React from "react";
+import { Home, Settings2, SquareTerminal } from 'lucide-react';
+import * as React from 'react';
 
-import { NavMain } from "@/components/nav-main";
-import { NavUser } from "@/components/nav-user";
-import { Team, TeamSwitcher } from "@/components/team-switcher";
+import { NavMain } from '@/components/nav-main';
+import { NavUser } from '@/components/nav-user';
+import { Team, TeamSwitcher } from '@/components/team-switcher';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar";
-import routes from "@/lib/routes";
+} from '@/components/ui/sidebar';
+import routes from '@/lib/routes';
 
 // This is sample data.
 const data = {
   navMain: [
     {
-      title: "Home",
+      title: 'Home',
       url: routes.app.dashboard.root,
       icon: Home,
     },
     {
-      title: "Platform",
-      url: "#",
+      title: 'Platform',
+      url: '#',
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "Features",
+          title: 'Features',
           url: routes.app.features.root,
         },
         {
-          title: "Products",
+          title: 'Products',
           url: routes.app.products.root,
         },
       ],
@@ -82,28 +82,32 @@ const data = {
     //   ],
     // },
     {
-      title: "Settings",
-      url: "#",
+      title: 'Settings',
+      url: '#',
       icon: Settings2,
       items: [
         {
-          title: "General",
+          title: 'General',
           url: routes.app.settings.general,
         },
         {
-          title: "API Keys",
+          title: 'API Keys',
           url: routes.app.settings.apiKeys,
         },
         {
-          title: "Team",
+          title: 'Team',
           url: routes.app.settings.team,
         },
         {
-          title: "Billing",
+          title: 'Billing',
           url: routes.app.settings.billing,
         },
         {
-          title: "Limits",
+          title: 'Stripe',
+          url: routes.app.settings.stripe,
+        },
+        {
+          title: 'Limits',
           url: routes.app.settings.limits,
         },
       ],

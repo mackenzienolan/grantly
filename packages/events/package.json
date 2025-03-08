@@ -5,13 +5,17 @@
   "type": "module",
   "exports": {
     "./clerk": "./src/events/clerk.ts",
+    "./core": "./src/events/core.ts",
     "./schema/*": "./src/schema/*.ts",
     "./registry": "./src/registry.ts",
     "./event": "./src/index.ts"
   },
   "dependencies": {
     "@clerk/backend": "catalog:clerk",
+    "@grantly/db": "workspace:*",
     "@macknolandev/clerk-zod": "catalog:",
+    "drizzle-orm": "catalog:drizzle",
+    "drizzle-zod": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
