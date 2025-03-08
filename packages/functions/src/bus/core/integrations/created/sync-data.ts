@@ -1,13 +1,11 @@
 import { withIdempotency } from "@/bus/utils/idempotency";
 import { createLogger } from "@/utils/logger";
-import { db, productsTable } from "@grantly/db";
+import { customersTable, db, productsTable } from "@grantly/db";
 import events from "@grantly/events/core";
-import { Resource } from "sst";
 import { bus } from "sst/aws/bus";
 import Stripe from "stripe";
 
 const logger = createLogger("core.integration.created");
-const stripe = new Stripe(Resource.STRIPE_SECRET_KEY.value);
 
 export const handler = bus.subscriber(
   events["integration.created"],
@@ -20,7 +18,7 @@ export const handler = bus.subscriber(
 
     if (!integration || !integration.teamId || !integration.accessToken) {
       logger.error(
-        { integrationId: evt.id },
+        { integrationId: evt.properties.id },
         "Integration not found, missing teamId, or missing accessToken"
       );
       return;
