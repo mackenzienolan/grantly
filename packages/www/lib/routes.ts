@@ -31,6 +31,7 @@ const routes = {
       billing: "/app/settings/billing",
       limits: "/app/settings/limits",
       apiKeys: "/app/settings/api-keys",
+      stripe: "/app/settings/stripe",
     },
   },
 } as const;
