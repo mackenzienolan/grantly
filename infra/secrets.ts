@@ -16,6 +16,7 @@ export const PUBLIC_CLERK_PUBLISHABLE_KEY = new sst.Secret(
 );
 
 export const STRIPE_SECRET_KEY = new sst.Secret("STRIPE_SECRET_KEY");
+export const STRIPE_OAUTH_SECRET_KEY = new sst.Secret("STRIPE_OAUTH_SECRET_KEY");
 
 export const STRIPE_OAUTH_URL = new sst.Secret(
   "STRIPE_OAUTH_URL",
@@ -30,4 +31,5 @@ export const API_SECRETS = [
   CLERK_PUBLISHABLE_KEY,
   PUBLIC_CLERK_PUBLISHABLE_KEY,
   STRIPE_SECRET_KEY,
+  STRIPE_OAUTH_SECRET_KEY,
 ];

@@ -10,7 +10,7 @@ import Stripe from "stripe";
 import type { AppRouteHandler } from "../../../../lib/types";
 import type { StripeOauthCreateRoute } from "./stripe.routes";
 
-const stripe = new Stripe(Resource.STRIPE_SECRET_KEY.value);
+const stripe = new Stripe(Resource.STRIPE_OAUTH_SECRET_KEY.value);
 
 export const stripeOauthCreate: AppRouteHandler<StripeOauthCreateRoute> = async (c) => {
   const { code } = c.req.valid("query");

@@ -1,25 +1,21 @@
-import { getStripeIntegration } from '@/app/(app)/app/settings/stripe/data';
-import { AppHeader } from '@/components/app-header';
-import { Button } from '@/components/ui/button';
-import routes from '@/lib/routes';
-import { auth } from '@clerk/nextjs/server';
-import { ExternalLink } from 'lucide-react';
-import Image from 'next/image';
+import { Disconnect } from "@/app/(app)/app/settings/stripe/components/disconnect";
+import { getPageData } from "@/app/(app)/app/settings/stripe/data";
+import { AppHeader } from "@/components/app-header";
+import { Button } from "@/components/ui/button";
+import routes from "@/lib/routes";
+import { CheckCircle, ExternalLink } from "lucide-react";
+import Image from "next/image";
 
 export default async function StripePage() {
   const stripeOAuthUrl = process.env.NEXT_PUBLIC_STRIPE_OAUTH_URL;
 
-  const { getToken } = await auth();
-  const token = await getToken();
-  const [stripeIntegration] = await getStripeIntegration({ token });
-
-  console.log(stripeIntegration);
+  const { stripeIntegration } = await getPageData();
   return (
     <div>
       <AppHeader
         breadcrumbs={[
-          { title: 'Settings', href: routes.app.settings.general },
-          { title: 'Stripe', href: routes.app.settings.stripe },
+          { title: "Settings", href: routes.app.settings.general },
+          { title: "Stripe", href: routes.app.settings.stripe },
         ]}
       />
       <div className="p-4 space-y-4">
@@ -29,9 +25,13 @@ export default async function StripePage() {
             Connect your Stripe account to start accepting payments through your application.
           </p>
           {stripeIntegration ? (
-            <Button variant="outline" className="bg-white hover:bg-gray-50 border-gray-300">
-              Stripe Connected
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" className="bg-white hover:bg-gray-50 border-gray-300">
+                <CheckCircle color="green" className="h-4 w-4 mr-1" />
+                Stripe Connected
+              </Button>
+              <Disconnect id={stripeIntegration.id} />
+            </div>
           ) : (
             <Button asChild variant="outline" className="bg-white hover:bg-gray-50 border-gray-300">
               <a

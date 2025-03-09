@@ -6,6 +6,7 @@ import oauthRouter from "./oauth/oauth.index";
 const router = createRouter()
   .openapi(routes.integrationsList, handlers.integrationsList)
   .openapi(routes.integrationsRetrieve, handlers.integrationRetrieve)
+  .openapi(routes.integrationsDelete, handlers.integrationsDelete)
   // .openapi(
   //   oauthStripeRoutes.stripeOauthCreate,
   //   oauthStripeHandlers.stripeOauthCreate
