@@ -1,0 +1,19 @@
+{
+  "name": "@grantly/integrations",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./stripe": "./src/stripe/index.ts"
+  },
+  "dependencies": {
+    "@grantly/db": "workspace:*",
+    "drizzle-orm": "catalog:",
+    "drizzle-zod": "catalog:",
+    "luxon": "catalog:",
+    "stripe": "catalog:"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.4.2"
+  }
+}

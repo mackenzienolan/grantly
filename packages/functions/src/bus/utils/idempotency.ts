@@ -7,11 +7,7 @@ const redis = new Redis({
   token: Resource.REDIS_TOKEN.value,
 });
 
-const acquireLock = async (
-  lockKey: string,
-  token: string,
-  ttl: number
-): Promise<boolean> => {
+const acquireLock = async (lockKey: string, token: string, ttl: number): Promise<boolean> => {
   const result = await redis.set(lockKey, token, {
     ex: ttl,
     nx: true,
@@ -35,9 +31,9 @@ type BusCallback<T> = (
   raw: Parameters<ReturnType<typeof bus.subscriber>>[0]
 ) => Promise<void>;
 
-export function withIdempotency<
-  T extends { metadata: { idempotencyKey: string } },
->(callback: BusCallback<T>): BusCallback<T> {
+export function withIdempotency<T extends { metadata: { idempotencyKey: string } }>(
+  callback: BusCallback<T>
+): BusCallback<T> {
   return async function (evt, raw) {
     const lockKey = `lock:${evt.metadata.idempotencyKey}`;
     const lockToken = Math.random().toString(36).substring(7); // Unique token per process

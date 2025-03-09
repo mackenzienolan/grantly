@@ -2,6 +2,7 @@ import { withIdempotency } from "@/bus/utils/idempotency";
 import { createLogger } from "@/utils/logger";
 import { customersTable, db, productsTable } from "@grantly/db";
 import events from "@grantly/events/core";
+import { refreshStripeIntegration } from "@grantly/integrations/stripe";
 import { bus } from "sst/aws/bus";
 import Stripe from "stripe";
 
@@ -29,8 +30,14 @@ export const handler = bus.subscriber(
       return;
     }
 
+    const { access_token } = await refreshStripeIntegration(integration);
+    if (!access_token) {
+      logger.error({ integrationId: evt.properties.id }, "Failed to refresh Stripe access token");
+      return;
+    }
+
     // Initialize Stripe client with the integration's access token
-    const stripeClient = new Stripe(integration.accessToken);
+    const stripeClient = new Stripe(access_token);
 
     try {
       // Sync Products
