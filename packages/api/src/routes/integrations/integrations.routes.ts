@@ -1,16 +1,17 @@
-import { createRoute, z } from '@hono/zod-openapi';
-import * as HttpStatusCodes from 'stoker/http-status-codes';
-import { jsonContent } from 'stoker/openapi/helpers';
+import { createRoute, z } from "@hono/zod-openapi";
+import * as HttpStatusCodes from "stoker/http-status-codes";
+import { jsonContent } from "stoker/openapi/helpers";
+import { bearerTokenSchema } from "../../schemas/auth";
 
-const tags = ['Integrations'];
+const tags = ["Integrations"];
 
 const integrationSelectSchema = z.object({
   id: z.number(),
 });
 
 export const integrationsRetrieve = createRoute({
-  path: '/integrations/{id}',
-  method: 'get',
+  path: "/integrations/{id}",
+  method: "get",
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
@@ -20,31 +21,31 @@ export const integrationsRetrieve = createRoute({
         //   integration: integrationSelectSchema,
         // }),
       }),
-      'Integration retrieved'
+      "Integration retrieved"
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       z.object({
         message: z.string(),
       }),
-      'Integration not found'
+      "Integration not found"
     ),
     [HttpStatusCodes.BAD_REQUEST]: jsonContent(
       z.object({
         message: z.string(),
       }),
-      'Bad request'
+      "Bad request"
     ),
     [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
       z.object({
         message: z.string(),
       }),
-      'Unauthorized'
+      "Unauthorized"
     ),
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
       z.object({
         message: z.string(),
       }),
-      'Internal server error'
+      "Internal server error"
     ),
   },
   request: {
@@ -57,13 +58,13 @@ export const integrationsRetrieve = createRoute({
 export type IntegrationsRetrieveRoute = typeof integrationsRetrieve;
 
 export const integrationsList = createRoute({
-  path: '/integrations',
-  method: 'get',
+  path: "/integrations",
+  method: "get",
   tags,
   request: {
     query: z.object({
-      type: z.enum(['stripe']).optional(),
-      status: z.enum(['active', 'inactive']).optional(),
+      type: z.enum(["stripe"]).optional(),
+      status: z.enum(["active", "inactive"]).optional(),
     }),
   },
   responses: {
@@ -74,27 +75,54 @@ export const integrationsList = createRoute({
           integrations: z.array(integrationSelectSchema),
         }),
       }),
-      'Integrations list'
+      "Integrations list"
     ),
     [HttpStatusCodes.BAD_REQUEST]: jsonContent(
       z.object({
         message: z.string(),
       }),
-      'Bad request'
+      "Bad request"
     ),
     [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
       z.object({
         message: z.string(),
       }),
-      'Unauthorized'
+      "Unauthorized"
     ),
     [HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
       z.object({
         message: z.string(),
       }),
-      'Internal server error'
+      "Internal server error"
     ),
   },
 });
 
 export type IntegrationsListRoute = typeof integrationsList;
+
+export const integrationsDelete = createRoute({
+  path: "/integrations/{id}",
+  method: "delete",
+  tags,
+  responses: {
+    [HttpStatusCodes.OK]: jsonContent(z.object({ message: z.string() }), "Integration deleted"),
+    [HttpStatusCodes.NOT_FOUND]: jsonContent(
+      z.object({ message: z.string() }),
+      "Integration not found"
+    ),
+    [HttpStatusCodes.BAD_REQUEST]: jsonContent(z.object({ message: z.string() }), "Bad request"),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(z.object({ message: z.string() }), "Unauthorized"),
+    [HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
+      z.object({ message: z.string() }),
+      "Internal server error"
+    ),
+  },
+  request: {
+    params: z.object({ id: z.coerce.number() }),
+    headers: z.object({
+      Authorization: bearerTokenSchema,
+    }),
+  },
+});
+
+export type IntegrationsDeleteRoute = typeof integrationsDelete;

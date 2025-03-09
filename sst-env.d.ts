@@ -33,6 +33,10 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
+    "STRIPE_OAUTH_SECRET_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "STRIPE_OAUTH_URL": {
       "type": "sst.sst.Secret"
       "value": string

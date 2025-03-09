@@ -32,8 +32,8 @@
     "pino": "9.6.0",
     "pino-pretty": "13.0.0",
     "stoker": "1.4.2",
-    "stripe": "^17.6.0",
-    "svix": "1.57.0",
+    "stripe": "catalog:",
+    "svix": "1.61.3",
     "zod": "catalog:"
   },
   "devDependencies": {

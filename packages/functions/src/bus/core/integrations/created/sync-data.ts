@@ -1,13 +1,12 @@
 import { withIdempotency } from "@/bus/utils/idempotency";
 import { createLogger } from "@/utils/logger";
-import { db, productsTable } from "@grantly/db";
+import { customersTable, db, productsTable } from "@grantly/db";
 import events from "@grantly/events/core";
-import { Resource } from "sst";
+import { refreshStripeIntegration } from "@grantly/integrations/stripe";
 import { bus } from "sst/aws/bus";
 import Stripe from "stripe";
 
 const logger = createLogger("core.integration.created");
-const stripe = new Stripe(Resource.STRIPE_SECRET_KEY.value);
 
 export const handler = bus.subscriber(
   events["integration.created"],
@@ -20,7 +19,7 @@ export const handler = bus.subscriber(
 
     if (!integration || !integration.teamId || !integration.accessToken) {
       logger.error(
-        { integrationId: evt.id },
+        { integrationId: evt.properties.id },
         "Integration not found, missing teamId, or missing accessToken"
       );
       return;
@@ -31,8 +30,14 @@ export const handler = bus.subscriber(
       return;
     }
 
+    const { access_token } = await refreshStripeIntegration(integration);
+    if (!access_token) {
+      logger.error({ integrationId: evt.properties.id }, "Failed to refresh Stripe access token");
+      return;
+    }
+
     // Initialize Stripe client with the integration's access token
-    const stripeClient = new Stripe(integration.accessToken);
+    const stripeClient = new Stripe(access_token);
 
     try {
       // Sync Products
